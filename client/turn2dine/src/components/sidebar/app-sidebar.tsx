@@ -46,7 +46,6 @@ const items = [
 
 export function AppSidebar() {
   const {state} = useSidebar();
-  console.log(state)
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className={cn(state === "collapsed" ? "" : "flex items-center justify-center")}>

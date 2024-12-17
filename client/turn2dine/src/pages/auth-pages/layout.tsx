@@ -8,9 +8,9 @@ export default function Layout() {
             <div>
                 <SidebarProvider>
                     <AppSidebar />
-                    <div className="relative">
+                    <div className="relative min-w-[calc(100%-16rem)]">
                         <SidebarTrigger className="absolute left-2"/>
-                        <div className="p-4 max-w-full">
+                        <div className="p-4">
                             <Outlet />
                         </div>
                     </div>
