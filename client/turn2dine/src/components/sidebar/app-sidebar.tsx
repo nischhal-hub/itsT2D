@@ -29,7 +29,7 @@ const items = [
   },
   {
     title: "Menus",
-    url: "#",
+    url: "/menu",
     icon: HandPlatter,
   },
   {

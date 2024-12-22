@@ -3,6 +3,7 @@ import Layout from "./pages/auth-pages/layout"
 import Dashboard from "./pages/auth-pages/dashboard/page"
 import Orders from "./pages/auth-pages/orders/page"
 import SingleOrder from "./pages/auth-pages/orders/[orderid]/page"
+import MenuPage from "./pages/auth-pages/menu/page"
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path='orders' element={<Orders />} />
             <Route path="orders/:id" element={<SingleOrder />} />
+            <Route path="menu" element={<MenuPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
