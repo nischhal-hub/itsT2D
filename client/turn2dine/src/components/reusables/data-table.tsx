@@ -13,16 +13,28 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "../ui/button"
 import { useState } from "react"
 import { Input } from "../ui/input"
+import { Plus } from "lucide-react"
 
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    functions?: {
+        search?:{
+            name?: string;
+            placeholder?: string;
+        },
+        add?:{
+            label?: string;
+            modalKey?: string;
+        }
+    }
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    functions,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -46,18 +58,26 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
-
+            <div className="flex justify-between items-center py-4">
+            <div>
+            {
+                functions && functions.search &&
+                <Input
+                    placeholder={functions?.search?.placeholder}
+                    value={(table.getColumn(`${functions.search.name}`)?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn(`${functions?.search?.name}`)?.setFilterValue(event.target.value)
+                    }
+                    className="max-w-sm"
+                />
+            }
+            </div>
+            {
+                functions && functions.add &&
+                <Button><Plus />{functions.add.label}</Button>
+            }
+            </div>
             <div className="rounded-md border">
-                <div className="flex items-center py-4">
-                    <Input
-                        placeholder="Search Name..."
-                        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                        onChange={(event) =>
-                            table.getColumn("name")?.setFilterValue(event.target.value)
-                        }
-                        className="max-w-sm"
-                    />
-                </div>
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

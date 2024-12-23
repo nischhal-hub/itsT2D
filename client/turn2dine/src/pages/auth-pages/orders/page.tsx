@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import PageHeader from "../../../components/reusables/page-header";
 import { Button } from "../../../components/ui/button";
 import SingleOrderCard from "./_components/single-order-card";
-import { Link, Outlet, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 export default function Orders() {
   const navigate = useNavigate();

@@ -34,12 +34,12 @@ const items = [
   },
   {
     title: "Table",
-    url: "#",
+    url: "/table",
     icon: Utensils,
   },
   {
     title: "Inventory",
-    url: "#",
+    url: "/inventory",
     icon: ShoppingBasket,
   },
 ]

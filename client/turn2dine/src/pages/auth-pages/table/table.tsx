@@ -1,7 +1,7 @@
 import { DataTable } from '../../../components/reusables/data-table'
 import { columns } from './column'
 
-export default function MenuTable() {
+export default function TableTable() {
   return (
     <div>
       <DataTable
@@ -9,11 +9,11 @@ export default function MenuTable() {
         data={[]}
         functions={{
           search:{
-            name: "name",
-            placeholder: "Search by name..."
+            name: "tableName",
+            placeholder: "Search by Table Name..."
           },
           add: {
-            label: "Add New Dishes",
+            label: "Add New Tables",
           }
         }}
       />

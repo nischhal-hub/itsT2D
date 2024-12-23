@@ -1,5 +1,12 @@
-export default function Inventory() {
+import PageHeader from "../../../components/reusables/page-header";
+import InventoryTable from "./table";
+
+
+export default function InventoryPage() {
   return (
-    <div>Hello world</div>
+    <>
+      <PageHeader title="Inventory" />
+      <InventoryTable />
+    </>
   )
 }
