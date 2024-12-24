@@ -6,6 +6,9 @@ import SingleOrder from "./pages/auth-pages/orders/[orderid]/page"
 import MenuPage from "./pages/auth-pages/menu/page"
 import InventoryPage from "./pages/auth-pages/inventory/page"
 import TablePage from "./pages/auth-pages/table/page"
+import DigitalMenu from "./pages/no-auth-pages/digital-menu/page"
+import { Toaster } from "./components/ui/sonner"
+
 
 function App() {
 
@@ -21,8 +24,10 @@ function App() {
             <Route path="table" element={<TablePage />} />
             <Route path="inventory" element={<InventoryPage />} />
           </Route>
+          <Route path="/digi-menu" element={<DigitalMenu />} />
         </Routes>
       </BrowserRouter>
+      
     </>
   )
 }

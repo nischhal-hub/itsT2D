@@ -1,5 +1,8 @@
+import { Plus } from 'lucide-react'
 import { DataTable } from '../../../components/reusables/data-table'
+import { Button } from '../../../components/ui/button'
 import { columns } from './column'
+import { toast } from 'sonner'
 
 export default function MenuTable() {
   return (
@@ -13,7 +16,9 @@ export default function MenuTable() {
             placeholder: "Search by name..."
           },
           add: {
-            label: "Add New Dishes",
+            node:(
+              <Button onClick={() => toast("Waiter called.")}><Plus />Add Dishes</Button>
+            )
           }
         }}
       />

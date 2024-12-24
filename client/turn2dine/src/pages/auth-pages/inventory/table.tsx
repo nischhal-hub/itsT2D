@@ -1,4 +1,6 @@
+import { Plus } from 'lucide-react'
 import { DataTable } from '../../../components/reusables/data-table'
+import { Button } from '../../../components/ui/button'
 import { columns } from './column'
 
 export default function InventoryTable() {
@@ -13,7 +15,9 @@ export default function InventoryTable() {
             placeholder: "Search by name..."
           },
           add: {
-            label: "Add New Dishes",
+            node:(
+              <Button><Plus />Add Ingredients</Button>
+            )
           }
         }}
       />

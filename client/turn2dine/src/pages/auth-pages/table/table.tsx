@@ -1,4 +1,6 @@
+import { Plus } from 'lucide-react'
 import { DataTable } from '../../../components/reusables/data-table'
+import { Button } from '../../../components/ui/button'
 import { columns } from './column'
 
 export default function TableTable() {
@@ -13,7 +15,9 @@ export default function TableTable() {
             placeholder: "Search by Table Name..."
           },
           add: {
-            label: "Add New Tables",
+            node:(
+              <Button><Plus />Add Table</Button>
+            )
           }
         }}
       />

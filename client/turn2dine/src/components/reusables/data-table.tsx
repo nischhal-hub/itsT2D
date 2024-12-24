@@ -25,8 +25,7 @@ interface DataTableProps<TData, TValue> {
             placeholder?: string;
         },
         add?:{
-            label?: string;
-            modalKey?: string;
+            node: React.ReactNode;
         }
     }
 }
@@ -74,7 +73,7 @@ export function DataTable<TData, TValue>({
             </div>
             {
                 functions && functions.add &&
-                <Button><Plus />{functions.add.label}</Button>
+                functions.add.node
             }
             </div>
             <div className="rounded-md border">
