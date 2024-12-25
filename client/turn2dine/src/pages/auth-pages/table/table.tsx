@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react'
 import { DataTable } from '../../../components/reusables/data-table'
 import { Button } from '../../../components/ui/button'
 import { columns } from './column'
+import { toast } from 'sonner'
 
 export default function TableTable() {
   return (
@@ -16,7 +17,7 @@ export default function TableTable() {
           },
           add: {
             node:(
-              <Button><Plus />Add Table</Button>
+              <Button onClick={() => toast("Table added")}><Plus />Add Table</Button>
             )
           }
         }}
