@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import Table ,Dish, Ingredient, AddOn
+from .models import Table ,Dish, Ingredient, AddOn, Order
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,3 +67,20 @@ class DishWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dish
         fields = ['id', 'name', 'description', 'price', 'ingredients', 'add_ons']
+
+class OrderSerializer(serializers.ModelSerializer):
+    table = serializers.PrimaryKeyRelatedField(queryset=Table.objects.all())
+    dishes = DishSerializer(many=True, read_only=True)
+    dish_ids = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Dish.objects.all(), write_only=True
+    )
+
+    class Meta:
+        model = Order
+        fields = ['id', 'table', 'dishes', 'dish_ids', 'status', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        dish_ids = validated_data.pop('dish_ids')
+        order = super().create(validated_data)
+        order.dishes.set(dish_ids)
+        return order

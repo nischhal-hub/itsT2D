@@ -5,11 +5,13 @@ from rest_framework import status
 from .serializers import UserRegistrationSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from .models import Table, Dish, Ingredient, AddOn
-from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer
+from .models import Table, Dish, Ingredient, AddOn,Order
+from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer
 import qrcode
 from io import BytesIO
 from django.core.files import File
+from rest_framework.decorators import action
+
 # Create your views here.
 
 class TestAuthView(APIView):
@@ -74,3 +76,19 @@ class AddOnViewSet(ModelViewSet):
     queryset = AddOn.objects.all()
     serializer_class = AddOnSerializer
 
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all().order_by('-created_at')
+    serializer_class = OrderSerializer
+
+    @action(detail=True, methods=['patch'])
+    def update_status(self, request, pk=None):
+        try:
+            order = self.get_object()
+            new_status = request.data.get('status')
+            if new_status not in ['Pending','Preparing','Completed']:
+                return Response({'error':'Invalid Status'},status=status.HTTP_400_BAD_REQUEST)
+            order.status = new_status
+            order.save()
+            return Response({"message":"Order status updated successfully","status":order.status})
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

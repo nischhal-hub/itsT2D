@@ -47,3 +47,4 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} for Table {self.table.id}"
+
