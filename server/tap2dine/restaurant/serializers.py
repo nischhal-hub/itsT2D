@@ -77,10 +77,24 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'table', 'dishes', 'dish_ids', 'status', 'created_at', 'updated_at']
+        fields = ['id', 'table', 'dishes', 'dish_ids', 'status','remarks', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         dish_ids = validated_data.pop('dish_ids')
+        remarks = validated_data.pop('remarks',None)
         order = super().create(validated_data)
         order.dishes.set(dish_ids)
+        if remarks:
+            order.remarks = remarks
+            order.save()
+
+        for dish in order.dishes.all():
+            for ingredient in dish.ingredients.all():
+                if ingredient.quantity_available < 1:
+                    raise serializers.ValidationError(
+                        f"Insufficient stock for ingredient {ingredient.name}."
+                    )
+                ingredient.quantity_available -= 1
+                ingredient.save()
+
         return order

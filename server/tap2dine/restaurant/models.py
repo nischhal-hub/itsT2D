@@ -42,6 +42,7 @@ class Order(models.Model):
         choices=[('Pending', 'Pending'), ('Preparing', 'Preparing'), ('Completed', 'Completed')],
         default='Pending'
     )
+    remarks = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
