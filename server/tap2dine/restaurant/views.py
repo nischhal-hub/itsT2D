@@ -1,13 +1,58 @@
-from django.shortcuts import render
-
-
-# Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .serializers import UserRegistrationSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.viewsets import ModelViewSet
+from .models import Table
+from .serializers import TableSerializer
+import qrcode
+from io import BytesIO
+from django.core.files import File
+# Create your views here.
 
 class TestAuthView(APIView):
     permission_classes=[IsAuthenticated]
     def get(self, request):
         return Response({'message':"You are authenticated", 'user':str(request.user)})
-        
+
+class UserRegistrationView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = UserRegistrationSerializer(data= request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"User Registered Successfully."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class TableViewSet(ModelViewSet):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        table = serializer.save()
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr_data = f"http:localhost:8000/digi-menu/{table.table_name}"
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+
+        qr_image = qr.make_image(fill='black',back_color='white')
+        buffer = BytesIO()
+        qr_image.save(buffer)
+        buffer.seek(0)
+
+        table.qr_code.save(f"{table.table_name}_qr.png",File(buffer), save=True)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response({"message":"Table created successfully."}, status=status.HTTP_201_CREATED, headers=headers)
+    
