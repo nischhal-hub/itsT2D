@@ -32,5 +32,5 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model= Table
-        fields=['id','table_name','qr_code']
+        fields=['id','name','qr_code']
         read_only_fields = ['qr_code']

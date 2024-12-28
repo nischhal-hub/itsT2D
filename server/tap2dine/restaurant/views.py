@@ -42,7 +42,7 @@ class TableViewSet(ModelViewSet):
             box_size=10,
             border=4,
         )
-        qr_data = f"http:localhost:8000/digi-menu/{table.table_name}"
+        qr_data = f"http:localhost:8000/digi-menu/{table.name}"
         qr.add_data(qr_data)
         qr.make(fit=True)
 
@@ -51,8 +51,10 @@ class TableViewSet(ModelViewSet):
         qr_image.save(buffer)
         buffer.seek(0)
 
-        table.qr_code.save(f"{table.table_name}_qr.png",File(buffer), save=True)
+        table.qr_code.save(f"{table.name}_qr.png",File(buffer), save=True)
 
         headers = self.get_success_headers(serializer.data)
         return Response({"message":"Table created successfully."}, status=status.HTTP_201_CREATED, headers=headers)
+    
+
     
