@@ -5,8 +5,8 @@ from rest_framework import status
 from .serializers import UserRegistrationSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from .models import Table
-from .serializers import TableSerializer
+from .models import Table, Dish, Ingredient, AddOn
+from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer
 import qrcode
 from io import BytesIO
 from django.core.files import File
@@ -57,4 +57,20 @@ class TableViewSet(ModelViewSet):
         return Response({"message":"Table created successfully."}, status=status.HTTP_201_CREATED, headers=headers)
     
 
+class DishViewSet(ModelViewSet):
+    queryset = Dish.objects.all()
     
+    def get_serializer_class(self):
+        if self.action in ['create', 'update']:
+            return DishWriteSerializer
+        return DishSerializer
+
+class IngredientViewSet(ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+
+
+class AddOnViewSet(ModelViewSet):
+    queryset = AddOn.objects.all()
+    serializer_class = AddOnSerializer
+

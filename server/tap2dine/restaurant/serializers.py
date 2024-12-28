@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import Table
+from .models import Table ,Dish, Ingredient, AddOn
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model= User
@@ -34,3 +35,35 @@ class TableSerializer(serializers.ModelSerializer):
         model= Table
         fields=['id','name','qr_code']
         read_only_fields = ['qr_code']
+
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = ['id', 'name', 'quantity_available']
+
+
+class AddOnSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddOn
+        fields = ['id', 'name', 'price']
+
+
+class DishSerializer(serializers.ModelSerializer):
+    ingredients = IngredientSerializer(many=True, read_only=True)
+    add_ons = AddOnSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Dish
+        fields = ['id', 'name', 'description', 'price', 'ingredients', 'add_ons']
+
+class DishWriteSerializer(serializers.ModelSerializer):
+    ingredients = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Ingredient.objects.all()
+    )
+    add_ons = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=AddOn.objects.all()
+    )
+
+    class Meta:
+        model = Dish
+        fields = ['id', 'name', 'description', 'price', 'ingredients', 'add_ons']

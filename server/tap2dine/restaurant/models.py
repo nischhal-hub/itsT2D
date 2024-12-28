@@ -33,3 +33,17 @@ class AddOn(models.Model):
 
     def __str__(self):
         return self.name
+
+class Order(models.Model):
+    table = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='orders')
+    dishes = models.ManyToManyField(Dish, related_name='orders')
+    status = models.CharField(
+        max_length=20,
+        choices=[('Pending', 'Pending'), ('Preparing', 'Preparing'), ('Completed', 'Completed')],
+        default='Pending'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Order {self.id} for Table {self.table.id}"
