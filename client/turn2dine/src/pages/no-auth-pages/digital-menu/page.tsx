@@ -11,6 +11,7 @@ import {
 } from "../../../components/ui/sheet"
 import OrderSummary from "./_components/order-summary";
 import { Fragment } from "react/jsx-runtime";
+import { DIGITAL_MENU_LOGO } from "../../../constants/images";
 
 export default function DigitalMenu() {
   return (
@@ -18,8 +19,8 @@ export default function DigitalMenu() {
       <Toaster />
       {/* logo section */}
       <div className="flex flex-col items-center justify-center pt-4">
-        <div className="w-20 h-20 bg-stone-950 text-white rounded-full flex items-center justify-center">
-          <p className="text-3xl font-medium">MM</p>
+        <div className="size-20 object-contain">
+          <img src={DIGITAL_MENU_LOGO} alt="LOGO" />
         </div>
         <p className="text-lg text-stone-950 font-medium pt-2">Motomania Cafe & Workshop</p>
       </div>
