@@ -2,10 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import UserRegistrationSerializer
+from .serializers import CategorySerializer, UserRegistrationSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from .models import Table, Dish, Ingredient, AddOn,Order
+from .models import Category, Table, Dish, Ingredient, AddOn,Order
 from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer, CheckOutSerializer
 import qrcode
 from io import BytesIO
@@ -66,6 +66,18 @@ class DishViewSet(ModelViewSet):
         if self.action in ['create', 'update']:
             return DishWriteSerializer
         return DishSerializer
+    
+    @action(detail=False, methods=['get'], url_path='category/(?P<category_id>\d+)/dishes')
+    def get_dishes_by_category(self, request, category_id=None):
+        # Filter dishes by category
+        dishes = Dish.objects.filter(category_id=category_id)
+        page = self.paginate_queryset(dishes)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(dishes, many=True)
+        return Response(serializer.data)
 
 class IngredientViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
@@ -76,6 +88,11 @@ class AddOnViewSet(ModelViewSet):
     queryset = AddOn.objects.all()
     serializer_class = AddOnSerializer
 
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all().order_by('-created_at')
     serializer_class = OrderSerializer

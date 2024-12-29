@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 
 from .utils import notify_order_created
-from .models import Table ,Dish, Ingredient, AddOn, Order
+from .models import Table ,Dish, Ingredient, AddOn, Order,Category
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,10 +65,15 @@ class DishWriteSerializer(serializers.ModelSerializer):
     add_ons = serializers.PrimaryKeyRelatedField(
         many=True, queryset=AddOn.objects.all()
     )
-
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     class Meta:
         model = Dish
-        fields = ['id', 'name', 'description', 'price', 'ingredients', 'add_ons']
+        fields = ['id', 'name', 'description', 'price', 'ingredients', 'add_ons','category']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'description']
 
 class OrderSerializer(serializers.ModelSerializer):
     table = serializers.PrimaryKeyRelatedField(queryset=Table.objects.all())
