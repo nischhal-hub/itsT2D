@@ -98,3 +98,23 @@ class OrderSerializer(serializers.ModelSerializer):
                 ingredient.save()
 
         return order
+
+class CheckOutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['id','checked_out','total_amount','payment_method']
+        read_only_fields = ['id']
+
+    def validate(self, data):
+        if self.instance.status != "Completed":
+            raise serializers.ValidationError("Order must be completed before checkout.")
+        if self.instance.checked_out:
+            raise serializers.ValidationError("Order has already been checked out.")
+        return data
+    
+    def update(self, instance, validated_data):
+        instance.checked_out = True
+        instance.total_amount = validated_data.get('total_amount', instance.total_amount)
+        instance.payment_method = validated_data.get('payment_method', instance.payment_method)
+        instance.save()
+        return instance

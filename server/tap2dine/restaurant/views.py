@@ -6,7 +6,7 @@ from .serializers import UserRegistrationSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 from .models import Table, Dish, Ingredient, AddOn,Order
-from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer
+from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer, CheckOutSerializer
 import qrcode
 from io import BytesIO
 from django.core.files import File
@@ -92,3 +92,20 @@ class OrderViewSet(ModelViewSet):
             return Response({"message":"Order status updated successfully","status":order.status})
         except Exception as e:
             return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class CheckoutView(APIView):
+    def patch(self, request, pk):
+        """Handle order checkout."""
+        try:
+            order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CheckOutSerializer(order, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "Order checked out successfully.",
+                "order": serializer.data
+            })
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
