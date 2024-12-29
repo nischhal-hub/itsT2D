@@ -39,12 +39,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # third party apps
+    'channels',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 
     # our apps
     'restaurant',
 ]
+
+ASGI_APPLICATION = 'tap2dine.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default':{
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts":[('127.0.0.1',6379)] #redis host and port
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

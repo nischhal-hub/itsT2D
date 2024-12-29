@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
+
+from .utils import notify_order_created
 from .models import Table ,Dish, Ingredient, AddOn, Order
 
 class UserSerializer(serializers.ModelSerializer):
@@ -96,7 +98,9 @@ class OrderSerializer(serializers.ModelSerializer):
                     )
                 ingredient.quantity_available -= 1
                 ingredient.save()
-
+        
+        notify_order_created(order)
+        
         return order
 
 class CheckOutSerializer(serializers.ModelSerializer):
