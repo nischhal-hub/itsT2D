@@ -2,6 +2,8 @@
 import { Plus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card'
 import { Button } from '../../../../components/ui/button'
+import { toast } from 'sonner'
+import { toastTrigger } from '../../../../lib/utils'
 
 export function MenuManagement() {
   // Mock data
@@ -15,7 +17,7 @@ export function MenuManagement() {
     <Card className="col-span-4">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className='text-lg'>Menu Management</CardTitle>
-        <Button size="sm" className='text-sm'>
+        <Button size="sm" className='text-sm' onClick={() => toastTrigger('Menu added successfully','success')}>
           <Plus className="mr-2 h-4 w-4" /> Add Item
         </Button>
       </CardHeader>

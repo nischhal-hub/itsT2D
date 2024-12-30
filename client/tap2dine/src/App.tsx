@@ -7,13 +7,14 @@ import MenuPage from "./pages/auth-pages/menu/page"
 import InventoryPage from "./pages/auth-pages/inventory/page"
 import TablePage from "./pages/auth-pages/table/page"
 import DigitalMenu from "./pages/no-auth-pages/digital-menu/page"
-import { Toaster } from "./components/ui/sonner"
+import { Toaster } from "sonner"
 
 
 function App() {
 
   return (
     <>
+    <Toaster richColors closeButton/>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Layout />}>
@@ -27,7 +28,6 @@ function App() {
           <Route path="/digi-menu" element={<DigitalMenu />} />
         </Routes>
       </BrowserRouter>
-      
     </>
   )
 }
