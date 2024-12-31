@@ -13,7 +13,6 @@ import ProtectedRoute from "./pages/auth/protected-route"
 
 
 function App() {
-
   return (
     <>
       <Toaster richColors closeButton />
