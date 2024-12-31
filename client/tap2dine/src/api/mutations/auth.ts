@@ -5,10 +5,10 @@ import { TLoginType } from "../../schemas/login";
 import { useNavigate } from "react-router";
 
 export const useLoginMutation = () => {
-    const navigate = useNavigate()
+const navigate = useNavigate()
 
     const loginMutation = useMutation({
-        mutationFn: (data: TLoginType) => api.post('/auth/token', data),
+        mutationFn: (data:TLoginType) => api.post('/auth/token', data),
         onSuccess: (data) => {
             localStorage.setItem('accessToken', data.data.access);
             localStorage.setItem('refreshToken', data.data.refresh);
