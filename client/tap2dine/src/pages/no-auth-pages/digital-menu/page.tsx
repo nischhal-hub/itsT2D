@@ -16,7 +16,6 @@ import { DIGITAL_MENU_LOGO } from "../../../constants/images";
 export default function DigitalMenu() {
   return (
     <div className=" w-full min-h-screen gap-2 p-2">
-      <Toaster />
       {/* logo section */}
       <div className="flex flex-col items-center justify-center pt-4">
         <div className="size-20 object-contain">

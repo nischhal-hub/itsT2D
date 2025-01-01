@@ -4,7 +4,7 @@ import { Button } from "../../../components/ui/button";
 import {Form} from "../../../components/ui/form";
 import { TLoginType, loginSchema } from "../../../schemas/login";
 import FormInput from "../../../components/reusables/form-input";
-import { useLoginMutation } from "../../../api/mutations/auth";
+import { useLoginMutation } from "../../../api/mutations/auth.mutation";
 
 
 export default function LoginForm() {
