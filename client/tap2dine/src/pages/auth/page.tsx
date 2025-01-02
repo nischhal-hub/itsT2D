@@ -1,5 +1,5 @@
 import { Button } from "../../components/ui/button";
-import { DIGITAL_MENU_LOGO, GIRL_ONLINE_ORDER, HORIZONTAL_LOGO, RESTAURANT } from "../../constants/images"
+import { DIGITAL_MENU_LOGO, GIRL_ONLINE_ORDER, RESTAURANT } from "../../constants/images"
 import LoginForm from "./_components/login-form";
 
 
