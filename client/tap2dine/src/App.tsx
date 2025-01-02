@@ -10,6 +10,7 @@ import DigitalMenu from "./pages/no-auth-pages/digital-menu/page"
 import { Toaster } from "sonner"
 import LoginPage from "./pages/auth/page"
 import ProtectedRoute from "./pages/auth/protected-route"
+import RegisterPage from "./pages/auth/register-page"
 
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
       <Toaster richColors closeButton />
       <BrowserRouter>
         <Routes>
-          <Route path="/auth" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path='/' element={
             <ProtectedRoute>
               <Layout />
