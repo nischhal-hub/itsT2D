@@ -1,19 +1,18 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '../../../components/ui/button'
-import { ArrowUpDown, EllipsisVertical, Pencil, Trash } from 'lucide-react'
+import { ArrowUpDown, Pencil, Trash } from 'lucide-react'
 import { Checkbox } from '../../../components/ui/checkbox'
-import PopTrigger from '../../../components/reusables/popover-trigger'
-import { Dialog, DialogTrigger, DialogContent } from '@radix-ui/react-dialog'
-import DeleteModal from '../../../modals/delete-modal'
+import useModalContext from '../../../hooks/useModalContext'
 
 
-type CategoryColumn = {
+
+export type CategoryColumns = {
     id: string
     name: string
     description: string
 }
 
-export const columns: ColumnDef<CategoryColumn>[] = [
+export const columns: ColumnDef<CategoryColumns>[] = [
     {
         id: "select",
         accessorKey: "id",
@@ -53,26 +52,32 @@ export const columns: ColumnDef<CategoryColumn>[] = [
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            return (
-                <div className='flex gap-2'>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size={"sm"} variant={"secondary"} className='text-white'><Pencil /></Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                        </DialogContent>
-                    </Dialog>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size={"sm"} variant={"destructive"}><Trash /></Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                        <DeleteModal/>
 
-                        </DialogContent>
-                    </Dialog>
-                </div>
+            return (
+                <ActionButton<CategoryColumns> row={row.original}/>
             )
         },
     }
 ]
+
+type TActionButton<T extends { id: string }> = {
+    row: T
+}
+
+function ActionButton<T extends { id: string }>({ row }: TActionButton<T>) {
+    const { openModal } = useModalContext();
+    return (
+        <div className="flex gap-2">
+            <Button size="sm" variant="secondary" className="text-white">
+                <Pencil />
+            </Button>
+            <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => openModal({ key: "DELETE_ITEM", initiatorName: row.id })}
+            >
+                <Trash />
+            </Button>
+        </div>
+    )
+}

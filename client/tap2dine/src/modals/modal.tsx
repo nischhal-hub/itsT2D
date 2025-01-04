@@ -15,9 +15,9 @@ export default function ModalX() {
                 return (
                     <Dialog key={key} open={modal.open} onOpenChange={() => closeModal(key as TModalKeys)}>
                         <DialogContent>
-                            <ModalComponent />
+                            <ModalComponent initiatorName={modal.initiatorName} data={modal.data}/>
                         </DialogContent>
-                    </Dialog>)
+                    </Dialog>) 
             })}
         </div>
     );
