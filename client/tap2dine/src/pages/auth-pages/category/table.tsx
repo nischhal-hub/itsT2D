@@ -10,10 +10,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from 'lucide-react'
 import { useFetchCategories } from '../../../api/queries/category.query'
 import { useAddCategoryMutation } from '../../../api/mutations/category.mutation'
+import useModalContext from '../../../hooks/useModalContext'
 
 export default function CategoryTable() {
+  const {openModal} = useModalContext();
   const {data} = useFetchCategories();
-  console.log(data)
   return (
     <div>
       <DataTable
@@ -26,14 +27,7 @@ export default function CategoryTable() {
           },
           add: {
             node: (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button><Plus/>Add Category</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <AddCategory />
-                </DialogContent>
-              </Dialog>
+                  <Button onClick={()=>openModal({key:"ADD_CATEGORY"})}><Plus/>Add Category</Button>
             )
           }
         }}

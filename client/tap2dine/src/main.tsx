@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/authContext.tsx'
 import { QueryClientProvider,QueryClient } from '@tanstack/react-query'
+import { ModalProvider } from './context/modalContext.tsx'
 
 const queryClient = new QueryClient();
 
@@ -11,7 +12,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <App />
+      <ModalProvider>
+        <App />
+      </ModalProvider>
     </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,

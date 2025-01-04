@@ -4,7 +4,7 @@ import { ArrowUpDown, EllipsisVertical, Pencil, Trash } from 'lucide-react'
 import { Checkbox } from '../../../components/ui/checkbox'
 import PopTrigger from '../../../components/reusables/popover-trigger'
 import { Dialog, DialogTrigger, DialogContent } from '@radix-ui/react-dialog'
-import DeleteModal from '../../../modal/delete-modal'
+import DeleteModal from '../../../modals/delete-modal'
 
 
 type CategoryColumn = {

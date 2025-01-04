@@ -12,12 +12,14 @@ import LoginPage from "./pages/auth/page"
 import ProtectedRoute from "./pages/auth/protected-route"
 import RegisterPage from "./pages/auth/register-page"
 import CategoryPage from "./pages/auth-pages/category/page"
+import ModalX from "./modals/modal"
 
 
 function App() {
   return (
     <>
       <Toaster richColors closeButton />
+      <ModalX/>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
