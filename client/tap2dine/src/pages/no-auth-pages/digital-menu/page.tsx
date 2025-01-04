@@ -12,11 +12,13 @@ import {
 import OrderSummary from "./_components/order-summary";
 import { Fragment } from "react/jsx-runtime";
 import { DIGITAL_MENU_LOGO } from "../../../constants/images";
+import PoweredBy from "./_components/powered-by";
 
 export default function DigitalMenu() {
   return (
     <div className="w-full h-auto flex justify-center bg-primary">
-      <div className="max-w-md min-h-screen gap-2 p-2 border-2 border-secondary bg-background">
+      <div className="max-w-md min-h-screen gap-2 p-2 border-2 border-secondary bg-background relative">
+      <PoweredBy />
       {/* logo section */}
       <div className="flex flex-col items-center justify-center pt-4">
         <div className="size-20 object-contain">
