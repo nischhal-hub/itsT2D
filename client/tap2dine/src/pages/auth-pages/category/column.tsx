@@ -1,18 +1,19 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '../../../components/ui/button'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, EllipsisVertical, Pencil, Trash } from 'lucide-react'
 import { Checkbox } from '../../../components/ui/checkbox'
+import PopTrigger from '../../../components/reusables/popover-trigger'
+import { Dialog, DialogTrigger, DialogContent } from '@radix-ui/react-dialog'
+import DeleteModal from '../../../modal/delete-modal'
 
 
-type MenuColumn = {
+type CategoryColumn = {
     id: string
     name: string
-    price: number
-    category: string
     description: string
 }
 
-export const columns: ColumnDef<MenuColumn>[] = [
+export const columns: ColumnDef<CategoryColumn>[] = [
     {
         id: "select",
         accessorKey: "id",
@@ -45,15 +46,33 @@ export const columns: ColumnDef<MenuColumn>[] = [
         },
     },
     {
-        accessorKey: 'price',
-        header: 'Price',
-    },
-    {
-        accessorKey: 'category',
-        header: 'Category',
-    },
-    {
         accessorKey: 'description',
         header: 'Description',
+    },
+    {
+        id: "actions",
+        enableHiding: false,
+        cell: ({ row }) => {
+            return (
+                <div className='flex gap-2'>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size={"sm"} variant={"secondary"} className='text-white'><Pencil /></Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size={"sm"} variant={"destructive"}><Trash /></Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                        <DeleteModal/>
+
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            )
+        },
     }
 ]

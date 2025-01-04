@@ -1,11 +1,11 @@
 import PageHeader from "../../../components/reusables/page-header";
-import MenuTable from "./table";
+import CategoryTable from "./table";
 
-export default function MenuPage() {
+export default function CategoryPage() {
   return (
     <>
-      <PageHeader title="Dishes" />
-      <MenuTable />
+      <PageHeader title="Dish Category" />
+      <CategoryTable />
     </>
   )
 }

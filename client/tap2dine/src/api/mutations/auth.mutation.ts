@@ -13,11 +13,11 @@ const navigate = useNavigate()
         onSuccess: (data) => {
             localStorage.setItem('accessToken', data.data.access);
             localStorage.setItem('refreshToken', data.data.refresh);
-            toastTrigger('Login successful', 'success');
+            toastTrigger('Login successful', undefined,'success');
             navigate('/');
         },
         onError: () => {
-            toastTrigger('Login failed: Invalid Email or password.', 'error');
+            toastTrigger('Login failed: Invalid Email or password.',undefined, 'error');
         }
     }
     )
@@ -29,11 +29,11 @@ export const useRegisterMutation = () => {
     const registerMutation = useMutation({
         mutationFn: (data:TRegisterType) => api.post('/register/', data),
         onSuccess: () => {
-            toastTrigger('Registration successful', 'success');
+            toastTrigger('Registration successful', undefined,'success');
             navigate('/auth');
         },
         onError: () => {
-            toastTrigger('Registration failed', 'error');
+            toastTrigger('Registration failed', undefined,'error');
         }
     }
     )

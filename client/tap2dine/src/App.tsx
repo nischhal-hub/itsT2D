@@ -11,6 +11,7 @@ import { Toaster } from "sonner"
 import LoginPage from "./pages/auth/page"
 import ProtectedRoute from "./pages/auth/protected-route"
 import RegisterPage from "./pages/auth/register-page"
+import CategoryPage from "./pages/auth-pages/category/page"
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="menu" element={<MenuPage />} />
             <Route path="table" element={<TablePage />} />
             <Route path="inventory" element={<InventoryPage />} />
+            <Route path="category" element={<CategoryPage />} />
 
           </Route>
           <Route path="/digi-menu" element={<DigitalMenu />} />
