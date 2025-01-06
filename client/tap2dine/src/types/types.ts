@@ -8,7 +8,6 @@ export type ModalType<K extends TModalKeys> = {
 
 export interface TModalDataMap {
   DELETE_ITEM: {
-    initiatorName: string;
     type: TDeleteItem["type"];
   };
   [key: string]: undefined | Record<string, any>;

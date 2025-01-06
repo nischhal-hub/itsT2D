@@ -76,7 +76,13 @@ export function ActionButton<T extends { id: string }>({
       <Button
         size="sm"
         variant="destructive"
-        onClick={() => openModal({ key: "DELETE_ITEM", initiatorName: row.id })}
+        onClick={() =>
+          openModal({
+            key: "DELETE_ITEM",
+            initiatorName: row.id,
+            data: { type: "category" },
+          })
+        }
       >
         <Trash />
       </Button>

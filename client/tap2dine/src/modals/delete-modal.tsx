@@ -5,7 +5,9 @@ import { DELETE } from "../constants/images";
 import useModalContext from "../hooks/useModalContext";
 import { ModalType } from "../types/types";
 
-export default function DeleteModal({ initiatorName }: ModalType) {
+export default function DeleteModal({
+  initiatorName,
+}: ModalType<"DELETE_ITEM">) {
   const { closeModal } = useModalContext();
   const queryClient = useQueryClient();
   const deleteHandler = useDeleteItem(queryClient);

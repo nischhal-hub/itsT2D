@@ -1,10 +1,11 @@
+import { ModalType } from "../types/types";
 import AddCategory from "./category/add-category-modal";
 import DeleteModal from "./delete-modal";
 
 type TModalData = {
   [key in TModalKeys]: {
     title: string;
-    component: React.FC<{ initiatorName?: string; data?: any }>;
+    component: React.FC<ModalType<key>>;
   };
 };
 
