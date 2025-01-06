@@ -70,7 +70,18 @@ export function ActionButton<T extends { id: string }>({
   const { openModal } = useModalContext();
   return (
     <div className="flex gap-2">
-      <Button size="sm" variant="secondary" className="text-white">
+      <Button
+        size="sm"
+        variant="secondary"
+        className="text-white"
+        onClick={() => {
+          openModal({
+            key: "EDIT_CATEGORY",
+            initiatorName: row.id,
+            data: row,
+          });
+        }}
+      >
         <Pencil />
       </Button>
       <Button
