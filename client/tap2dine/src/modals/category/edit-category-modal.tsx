@@ -1,9 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  useAddCategoryMutation,
-  useEditCategoryMutation,
-} from "../../api/mutations/category.mutation";
+import { useEditCategoryMutation } from "../../api/mutations/category.mutation";
 import { Button } from "../../components/ui/button";
 import { TCategoryType, categorySchema } from "../../schemas/category";
 import { Form } from "../../components/ui/form";

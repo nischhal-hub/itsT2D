@@ -3,6 +3,8 @@ import { Button } from "../../../components/ui/button";
 import { ArrowUpDown, Pencil, Trash } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
 import useModalContext from "../../../hooks/useModalContext";
+import { TModalKeys } from "../../../modals/data";
+import { TDeleteItem } from "../../../api/mutations/delete.mutation";
 
 export type CategoryColumns = {
   id: string;
@@ -55,17 +57,35 @@ export const columns: ColumnDef<CategoryColumns>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      return <ActionButton<CategoryColumns> row={row.original} />;
+      return (
+        <ActionButton<CategoryColumns>
+          row={row.original}
+          edit={{
+            key: "ADD_CATEGORY",
+          }}
+          delete={{
+            type: "category",
+          }}
+        />
+      );
     },
   },
 ];
 
 type TActionButton<T extends { id: string }> = {
   row: T;
+  edit: {
+    key: TModalKeys;
+  };
+  delete: {
+    type: TDeleteItem["type"];
+  };
 };
 
 export function ActionButton<T extends { id: string }>({
   row,
+  edit,
+  delete: deleteProps,
 }: TActionButton<T>) {
   const { openModal } = useModalContext();
   return (
@@ -76,7 +96,7 @@ export function ActionButton<T extends { id: string }>({
         className="text-white"
         onClick={() => {
           openModal({
-            key: "EDIT_CATEGORY",
+            key: edit.key, //Modal key
             initiatorName: row.id,
             data: row,
           });
@@ -91,7 +111,7 @@ export function ActionButton<T extends { id: string }>({
           openModal({
             key: "DELETE_ITEM",
             initiatorName: row.id,
-            data: { type: "category" },
+            data: { type: deleteProps.type },
           })
         }
       >
