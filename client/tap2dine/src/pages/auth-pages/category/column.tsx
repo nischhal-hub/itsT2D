@@ -1,18 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../../../components/ui/button";
-import { ArrowUpDown, Pencil, Trash } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
-import useModalContext from "../../../hooks/useModalContext";
-import { TModalKeys } from "../../../modals/data";
-import { TDeleteItem } from "../../../api/mutations/delete.mutation";
+import { ActionButton } from "../../../components/reusables/action-button";
+import { TCategoryResopnseType } from "../../../types/response.types";
 
-export type CategoryColumns = {
-  id: string;
-  name: string;
-  description: string;
-};
-
-export const columns: ColumnDef<CategoryColumns>[] = [
+export const columns: ColumnDef<TCategoryResopnseType>[] = [
   {
     id: "select",
     accessorKey: "id",
@@ -58,7 +51,7 @@ export const columns: ColumnDef<CategoryColumns>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return (
-        <ActionButton<CategoryColumns>
+        <ActionButton<TCategoryResopnseType>
           row={row.original}
           edit={{
             key: "ADD_CATEGORY",
@@ -71,52 +64,3 @@ export const columns: ColumnDef<CategoryColumns>[] = [
     },
   },
 ];
-
-type TActionButton<T extends { id: string }> = {
-  row: T;
-  edit: {
-    key: TModalKeys;
-  };
-  delete: {
-    type: TDeleteItem["type"];
-  };
-};
-
-export function ActionButton<T extends { id: string }>({
-  row,
-  edit,
-  delete: deleteProps,
-}: TActionButton<T>) {
-  const { openModal } = useModalContext();
-  return (
-    <div className="flex gap-2">
-      <Button
-        size="sm"
-        variant="secondary"
-        className="text-white"
-        onClick={() => {
-          openModal({
-            key: edit.key, //Modal key
-            initiatorName: row.id,
-            data: row,
-          });
-        }}
-      >
-        <Pencil />
-      </Button>
-      <Button
-        size="sm"
-        variant="destructive"
-        onClick={() =>
-          openModal({
-            key: "DELETE_ITEM",
-            initiatorName: row.id,
-            data: { type: deleteProps.type },
-          })
-        }
-      >
-        <Trash />
-      </Button>
-    </div>
-  );
-}

@@ -2,6 +2,10 @@ import { ModalType } from "../types/modal.types";
 import AddCategory from "./category/add-category-modal";
 import EditCategory from "./category/edit-category-modal";
 import DeleteModal from "./delete-modal";
+import AddIngredient from "./inventory/add-ingredient";
+import EditIngredient from "./inventory/edit-ingredient";
+import AddTable from "./table/add-table";
+import EditTable from "./table/edit-table";
 
 type TModalData = {
   [key in TModalKeys]: {
@@ -10,7 +14,14 @@ type TModalData = {
   };
 };
 
-export type TModalKeys = "ADD_CATEGORY" | "DELETE_ITEM" | "EDIT_CATEGORY";
+export type TModalKeys =
+  | "ADD_CATEGORY"
+  | "DELETE_ITEM"
+  | "EDIT_CATEGORY"
+  | "ADD_INGREDIENT"
+  | "EDIT_INGREDIENT"
+  | "ADD_TABLE"
+  | "EDIT_TABLE";
 
 export const ModalData: TModalData = {
   ADD_CATEGORY: {
@@ -24,5 +35,21 @@ export const ModalData: TModalData = {
   DELETE_ITEM: {
     title: "Delete",
     component: DeleteModal,
+  },
+  ADD_INGREDIENT: {
+    title: "Add Ingredient",
+    component: AddIngredient,
+  },
+  EDIT_INGREDIENT: {
+    title: "Edit Ingredient",
+    component: EditIngredient,
+  },
+  ADD_TABLE: {
+    title: "Add Table",
+    component: AddTable,
+  },
+  EDIT_TABLE: {
+    title: "Edit Table",
+    component: EditTable,
   },
 };

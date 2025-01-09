@@ -19,7 +19,7 @@ export const useAddIngredientMutation = () => {
   return addIngredientMutation;
 };
 
-export const useEditCategoryMutation = ({
+export const useEditIngredientMutation = ({
   initiatorName,
 }: {
   initiatorName: string;

@@ -1,6 +1,9 @@
 import { TDeleteItem } from "../api/mutations/delete.mutation";
 import { TModalKeys } from "../modals/data";
 import { TCategoryType } from "../schemas/category";
+import { TIngredientType } from "../schemas/ingredient";
+import { TTableType } from "../schemas/table";
+import { TTableResponseType } from "./response.types";
 
 export type ModalType<K extends TModalKeys> = {
   initiatorName?: string;
@@ -12,5 +15,7 @@ export interface TModalDataMap {
     type: TDeleteItem["type"];
   };
   EDIT_CATEGORY: TCategoryType;
+  EDIT_INGREDIENT: TIngredientType;
+  EDIT_TYPE: TTableResponseType;
   [key: string]: undefined | Record<string, any>;
 }

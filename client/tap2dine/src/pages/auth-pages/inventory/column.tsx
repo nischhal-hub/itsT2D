@@ -2,16 +2,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../../../components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
+import { ActionButton } from "../../../components/reusables/action-button";
+import { TIngredientResponseType } from "../../../types/response.types";
 
-type MenuColumn = {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  description: string;
-};
-
-export const columns: ColumnDef<MenuColumn>[] = [
+export const columns: ColumnDef<TIngredientResponseType>[] = [
   {
     id: "select",
     accessorKey: "id",
@@ -51,5 +45,22 @@ export const columns: ColumnDef<MenuColumn>[] = [
   {
     accessorKey: "quantity_available",
     header: "Quantity available",
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      return (
+        <ActionButton<TIngredientResponseType>
+          row={row.original}
+          edit={{
+            key: "EDIT_INGREDIENT",
+          }}
+          delete={{
+            type: "ingredient",
+          }}
+        />
+      );
+    },
   },
 ];

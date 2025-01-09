@@ -3,10 +3,11 @@ import { useDeleteItem } from "../api/mutations/delete.mutation";
 import { Button } from "../components/ui/button";
 import { DELETE } from "../constants/images";
 import useModalContext from "../hooks/useModalContext";
-import { ModalType } from "../types/types";
+import { ModalType } from "../types/modal.types";
 
 export default function DeleteModal({
   initiatorName,
+  data,
 }: ModalType<"DELETE_ITEM">) {
   const { closeModal } = useModalContext();
   const queryClient = useQueryClient();
@@ -24,7 +25,7 @@ export default function DeleteModal({
           onClick={() =>
             deleteHandler({
               initiatorName: initiatorName || "",
-              type: "category",
+              type: data?.type,
             })
           }
         >
