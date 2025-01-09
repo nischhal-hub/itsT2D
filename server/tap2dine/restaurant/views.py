@@ -38,25 +38,19 @@ class TableViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         table = serializer.save()
 
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr_data = f"http:localhost:8000/digi-menu/{table.name}"
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-
-        qr_image = qr.make_image(fill='black',back_color='white')
-        buffer = BytesIO()
-        qr_image.save(buffer)
-        buffer.seek(0)
-
-        table.qr_code.save(f"{table.name}_qr.png",File(buffer), save=True)
+        # Generate the URL for the QR code
+        qr_url = f"http://localhost:5173/digi-menu/{table.id}"
+        
+        # Save the URL in the qr_code field
+        table.qr_code = qr_url
+        table.save()
 
         headers = self.get_success_headers(serializer.data)
-        return Response({"message":"Table created successfully."}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            {"message": "Table created successfully.", "qr_code_url": qr_url},
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
     
 
 class DishViewSet(ModelViewSet):
