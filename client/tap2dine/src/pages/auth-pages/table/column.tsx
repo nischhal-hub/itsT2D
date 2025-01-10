@@ -4,8 +4,8 @@ import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { ActionButton } from "../../../components/reusables/action-button";
 import { format } from "date-fns";
-import QRCode from "react-qr-code";
 import { TTableResponseType } from "../../../types/response.types";
+import { ModalTrigger } from "../../../components/reusables/modal-trigger";
 
 export const columns: ColumnDef<TTableResponseType>[] = [
   {
@@ -47,9 +47,14 @@ export const columns: ColumnDef<TTableResponseType>[] = [
     header: "QR code",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 w-14 h-14">
-          <QRCode value={row.original.qr_code} />
-        </div>
+        <ModalTrigger modalKey={"VIEW_QR"} data={row.original}>
+          <Button variant={"link"} className="p-0">
+            View QR
+          </Button>
+        </ModalTrigger>
+        // <div className="flex items-center gap-2 w-14 h-14">
+        //   <QRCode value={row.original.qr_code} />
+        // </div>
       );
     },
   },

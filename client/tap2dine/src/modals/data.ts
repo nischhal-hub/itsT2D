@@ -6,6 +6,7 @@ import AddIngredient from "./inventory/add-ingredient";
 import EditIngredient from "./inventory/edit-ingredient";
 import AddTable from "./table/add-table";
 import EditTable from "./table/edit-table";
+import ViewQr from "./table/view-qr";
 
 type TModalData = {
   [key in TModalKeys]: {
@@ -21,7 +22,8 @@ export type TModalKeys =
   | "ADD_INGREDIENT"
   | "EDIT_INGREDIENT"
   | "ADD_TABLE"
-  | "EDIT_TABLE";
+  | "EDIT_TABLE"
+  | "VIEW_QR";
 
 export const ModalData: TModalData = {
   ADD_CATEGORY: {
@@ -51,5 +53,9 @@ export const ModalData: TModalData = {
   EDIT_TABLE: {
     title: "Edit Table",
     component: EditTable,
+  },
+  VIEW_QR: {
+    title: "QR",
+    component: ViewQr,
   },
 };

@@ -14,7 +14,7 @@ type TActionButton<T> = {
   };
 };
 
-export function ActionButton<T>({
+export function ActionButton<T extends { id: string }>({
   row,
   edit,
   delete: deleteProps,
