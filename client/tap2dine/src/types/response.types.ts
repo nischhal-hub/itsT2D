@@ -9,6 +9,11 @@ export type TCategoryResopnseType = {
   name: string;
   description: string;
 };
+export type TAddonResopnseType = {
+  id: string;
+  name: string;
+  price: number;
+};
 export type TIngredientResponseType = {
   id: string;
   name: string;

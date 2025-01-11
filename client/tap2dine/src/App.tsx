@@ -14,6 +14,7 @@ import RegisterPage from "./pages/auth/register-page";
 import CategoryPage from "./pages/auth-pages/category/page";
 import ModalX from "./modals/modal";
 import AddDish from "./pages/auth-pages/menu/(dish-form)/add-dish";
+import AddonPage from "./pages/auth-pages/add-ons/page";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="table" element={<TablePage />} />
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="category" element={<CategoryPage />} />
+            <Route path="add-ons" element={<AddonPage />} />
           </Route>
           <Route path="/digi-menu" element={<DigitalMenu />} />
         </Routes>
