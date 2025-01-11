@@ -13,6 +13,7 @@ import ProtectedRoute from "./pages/auth/protected-route";
 import RegisterPage from "./pages/auth/register-page";
 import CategoryPage from "./pages/auth-pages/category/page";
 import ModalX from "./modals/modal";
+import AddDish from "./pages/auth-pages/menu/(dish-form)/add-dish";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="orders/:id" element={<SingleOrder />} />
             <Route path="menu" element={<MenuPage />} />
+            <Route path="menu/add-dish" element={<AddDish />} />
             <Route path="table" element={<TablePage />} />
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="category" element={<CategoryPage />} />

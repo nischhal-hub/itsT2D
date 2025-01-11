@@ -4,6 +4,7 @@ import EditCategory from "./category/edit-category-modal";
 import DeleteModal from "./delete-modal";
 import AddIngredient from "./inventory/add-ingredient";
 import EditIngredient from "./inventory/edit-ingredient";
+import AddDish from "./menu/add-dish";
 import AddTable from "./table/add-table";
 import EditTable from "./table/edit-table";
 import ViewQr from "./table/view-qr";
@@ -23,7 +24,8 @@ export type TModalKeys =
   | "EDIT_INGREDIENT"
   | "ADD_TABLE"
   | "EDIT_TABLE"
-  | "VIEW_QR";
+  | "VIEW_QR"
+  | "ADD_DISH";
 
 export const ModalData: TModalData = {
   ADD_CATEGORY: {
@@ -57,5 +59,9 @@ export const ModalData: TModalData = {
   VIEW_QR: {
     title: "QR",
     component: ViewQr,
+  },
+  ADD_DISH: {
+    title: "Add Dish",
+    component: AddDish,
   },
 };

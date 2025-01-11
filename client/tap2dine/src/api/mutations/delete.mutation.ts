@@ -5,7 +5,7 @@ import useModalContext from "../../hooks/useModalContext";
 
 export type TDeleteItem = {
   initiatorName: string;
-  type: "category" | "ingredient" | "table" | undefined;
+  type: "category" | "ingredient" | "table" | "dish" | undefined;
 };
 export const useDeleteItem = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -48,6 +48,18 @@ export const useDeleteItem = (
       toastTrigger(`Table deletion failed`, undefined, "error");
     },
   });
+  const { mutate: deleteDish } = useMutation({
+    mutationFn: (data: string) => api.delete(`/dishes/${data}/`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dishes"] });
+      closeModal("DELETE_ITEM");
+      toastTrigger("Dish deleted successfully", undefined, "success");
+    },
+    onError: (error) => {
+      console.error(error);
+      toastTrigger(`Dish deletion failed`, undefined, "error");
+    },
+  });
   function deleteHandler({ initiatorName, type }: TDeleteItem) {
     switch (type) {
       case "category":
@@ -58,6 +70,9 @@ export const useDeleteItem = (
         break;
       case "table":
         deleteTable(initiatorName);
+        break;
+      case "dish":
+        deleteDish(initiatorName);
         break;
       default:
         break;

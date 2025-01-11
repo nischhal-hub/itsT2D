@@ -14,3 +14,13 @@ export type TIngredientResponseType = {
   name: string;
   quantity_available: number;
 };
+
+export type TDishResponseType = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  ingredients: TIngredientResponseType[];
+  add_ons: string[];
+  category: TCategoryResopnseType;
+};
