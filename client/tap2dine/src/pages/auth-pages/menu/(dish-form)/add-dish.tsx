@@ -7,13 +7,14 @@ import { MultiSelect } from "../../../../components/reusables/multi-select";
 import { Button } from "../../../../components/ui/button";
 import { TDishType, dishSchema } from "../../../../schemas/dish";
 import {
+  TAddonResopnseType,
   TCategoryResopnseType,
   TIngredientResponseType,
 } from "../../../../types/response.types";
 import FormInput from "../../../../components/reusables/form-input";
 import { Form } from "../../../../components/ui/form";
 import PageHeader from "../../../../components/reusables/page-header";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import {
   Select,
@@ -23,6 +24,7 @@ import {
   SelectValue,
 } from "../../../../components/ui/select";
 import { useFetchCategories } from "../../../../api/queries/category.query";
+import { useFetchAddons } from "../../../../api/queries/addons.query";
 
 export default function AddDish() {
   const [ingredients, setIngredients] = useState<
@@ -34,8 +36,18 @@ export default function AddDish() {
       }>;
     }[]
   >([]);
-  // const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [addons, setAddons] = useState<
+    {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{
+        className?: string;
+      }>;
+    }[]
+  >([]);
+  const navigate = useNavigate();
   const { data: ingredientsData } = useFetchIngredients();
+  const { data: addonsData } = useFetchAddons();
   const { data: categories } = useFetchCategories();
   useEffect(() => {
     if (ingredientsData) {
@@ -47,6 +59,16 @@ export default function AddDish() {
       );
     }
   }, [ingredientsData]);
+  useEffect(() => {
+    if (addonsData) {
+      setAddons(
+        addonsData.map((addon: TAddonResopnseType) => ({
+          label: addon.name,
+          value: addon.id.toString(),
+        })),
+      );
+    }
+  }, [addonsData]);
   const form = useForm<TDishType>({
     resolver: zodResolver(dishSchema),
     mode: "onChange",
@@ -65,16 +87,12 @@ export default function AddDish() {
     mutate(data, {
       onSuccess: () => {
         form.reset();
+        setAddons([]);
+        setIngredients([]);
+        navigate("/menu");
       },
     });
   };
-
-  // useEffect(() => {
-  //   if (selectedIngredients) {
-  //     form.setValue("ingredients", selectedIngredients);
-  //   }
-  // }, [selectedIngredients, form]);
-  console.log(form.watch("ingredients"));
   return (
     <div className="w-full">
       <div className="flex items-center gap-4">
@@ -155,19 +173,30 @@ export default function AddDish() {
                     variant="inverted"
                   />
                 )}
-                required
               />
-              {/* <MultiSelect
-                options={ingredients}
-                onValueChange={setSelectedIngredients}
-                placeholder="Select Ingredients"
-                variant="inverted"
-              /> */}
+              <FormInput
+                label="Select Addons"
+                form={form}
+                name="add_ons"
+                render={(field) => (
+                  <MultiSelect
+                    options={addons}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    placeholder="Select Addons"
+                    variant="inverted"
+                  />
+                )}
+              />
               <div className="flex justify-end gap-3">
                 <Button
                   variant={"outline"}
                   className="w-full mt-4"
-                  onClick={() => form.reset()}
+                  onClick={() => {
+                    form.reset();
+                    setAddons([]);
+                    setIngredients([]);
+                  }}
                 >
                   Reset
                 </Button>

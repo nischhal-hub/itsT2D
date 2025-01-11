@@ -15,6 +15,7 @@ import CategoryPage from "./pages/auth-pages/category/page";
 import ModalX from "./modals/modal";
 import AddDish from "./pages/auth-pages/menu/(dish-form)/add-dish";
 import AddonPage from "./pages/auth-pages/add-ons/page";
+import EditDish from "./pages/auth-pages/menu/(dish-form)/edit-dish";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="orders/:id" element={<SingleOrder />} />
             <Route path="menu" element={<MenuPage />} />
             <Route path="menu/add-dish" element={<AddDish />} />
+            <Route path="menu/edit-dish/:id" element={<EditDish />} />
             <Route path="table" element={<TablePage />} />
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="category" element={<CategoryPage />} />

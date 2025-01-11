@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { TModalKeys } from "../modals/data";
-import { TModalDataMap } from "../types/types";
+import { TModalDataMap } from "../types/modal.types";
 
 type TModalState = {
   [key in TModalKeys]: {

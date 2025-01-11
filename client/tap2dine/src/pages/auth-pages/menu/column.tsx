@@ -78,7 +78,8 @@ export const columns: ColumnDef<TDishResponseType>[] = [
         <ActionButton<TDishResponseType>
           row={row.original}
           edit={{
-            key: "EDIT_INGREDIENT",
+            key: "EDIT_ADDON", //* THIS IS JUST A RANDOM KEY AS PROVIDING ONPAGEURL REDIRECTS TO A PAGE INSTEAD OF OPENING MODAL. NEED TO FIX THSI
+            onPageUrl: "/menu/edit-dish",
           }}
           delete={{
             type: "dish",

@@ -1,20 +1,22 @@
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { useAddDishMutation } from "../../../../api/mutations/dish.mutation";
+import { useEditDishMutation } from "../../../../api/mutations/dish.mutation";
 import { useFetchIngredients } from "../../../../api/queries/ingredients.query";
 import { MultiSelect } from "../../../../components/reusables/multi-select";
 import { Button } from "../../../../components/ui/button";
 import { TDishType, dishSchema } from "../../../../schemas/dish";
 import {
+  TAddonResopnseType,
   TCategoryResopnseType,
   TIngredientResponseType,
 } from "../../../../types/response.types";
 import FormInput from "../../../../components/reusables/form-input";
 import { Form } from "../../../../components/ui/form";
 import PageHeader from "../../../../components/reusables/page-header";
-import { Link } from "react-router";
-import { ChevronLeft } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -23,30 +25,43 @@ import {
   SelectValue,
 } from "../../../../components/ui/select";
 import { useFetchCategories } from "../../../../api/queries/category.query";
+import { useFetchAddons } from "../../../../api/queries/addons.query";
+import { useFetchSingleDish } from "../../../../api/queries/dish.query";
 
-export default function AddDish() {
+export default function EditDish() {
+  const { id: dishId } = useParams();
+  const navigate = useNavigate();
+
+  const { data: dishData, isLoading: isDishLoading } = useFetchSingleDish({
+    queryParams: dishId!,
+  });
+  const { data: ingredientsData, isLoading: isIngredientsLoading } =
+    useFetchIngredients();
+  const { data: addonsData, isLoading: isAddonsLoading } = useFetchAddons();
+  const { data: categories, isLoading: isCategoriesLoading } =
+    useFetchCategories();
+
   const [ingredients, setIngredients] = useState<
     {
       label: string;
       value: string;
-      icon?: React.ComponentType<{
-        className?: string;
-      }>;
+      icon?: React.ComponentType<{ className?: string }>;
     }[]
   >([]);
-  // const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const { data: ingredientsData } = useFetchIngredients();
-  const { data: categories } = useFetchCategories();
-  useEffect(() => {
-    if (ingredientsData) {
-      setIngredients(
-        ingredientsData.map((ingredient: TIngredientResponseType) => ({
-          label: ingredient.name,
-          value: ingredient.id.toString(),
-        })),
-      );
-    }
-  }, [ingredientsData]);
+  const [addons, setAddons] = useState<
+    {
+      label: string;
+      value: string;
+      icon?: React.ComponentType<{ className?: string }>;
+    }[]
+  >([]);
+
+  const isLoading =
+    isDishLoading ||
+    isIngredientsLoading ||
+    isAddonsLoading ||
+    isCategoriesLoading;
+
   const form = useForm<TDishType>({
     resolver: zodResolver(dishSchema),
     mode: "onChange",
@@ -59,29 +74,82 @@ export default function AddDish() {
       category: "",
     },
   });
-  const { mutate } = useAddDishMutation();
+
+  // Update form values when dish data is loaded
+  useEffect(() => {
+    if (dishData) {
+      const initialIngredients =
+        dishData.ingredients?.map((ingredient: TIngredientResponseType) =>
+          ingredient.id.toString(),
+        ) || [];
+
+      const initialAddons =
+        dishData.add_ons?.map((addon: TAddonResopnseType) =>
+          addon.id.toString(),
+        ) || [];
+
+      form.reset({
+        name: dishData.name,
+        description: dishData.description,
+        price: dishData.price,
+        ingredients: initialIngredients,
+        add_ons: initialAddons,
+        category: dishData.category?.id.toString(),
+      });
+    }
+  }, [dishData, form.reset]);
+
+  useEffect(() => {
+    if (ingredientsData) {
+      setIngredients(
+        ingredientsData.map((ingredient: TIngredientResponseType) => ({
+          label: ingredient.name,
+          value: ingredient.id.toString(),
+        })),
+      );
+    }
+  }, [ingredientsData]);
+
+  useEffect(() => {
+    if (addonsData) {
+      setAddons(
+        addonsData.map((addon: TAddonResopnseType) => ({
+          label: addon.name,
+          value: addon.id.toString(),
+        })),
+      );
+    }
+  }, [addonsData]);
+
+  const { mutate } = useEditDishMutation({ initiatorName: dishId! });
+
   const onSubmit = (data: TDishType) => {
-    console.log("form submitted");
+    console.log("Submitting data:", data);
     mutate(data, {
       onSuccess: () => {
-        form.reset();
+        navigate("/menu");
       },
     });
   };
 
-  // useEffect(() => {
-  //   if (selectedIngredients) {
-  //     form.setValue("ingredients", selectedIngredients);
-  //   }
-  // }, [selectedIngredients, form]);
-  console.log(form.watch("ingredients"));
+  if (isLoading) {
+    return (
+      <div className="w-full h-[50vh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-gray-500">Loading dish details...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center gap-4">
         <Link to="/menu">
           <ChevronLeft className="text-primary border rounded-md" />
         </Link>
-        <PageHeader title="Add Dish" />
+        <PageHeader title="Edit Dish" />
       </div>
       <div className="max-w-2xl border rounded-md p-4">
         <div>
@@ -141,7 +209,6 @@ export default function AddDish() {
                 )}
                 required
               />
-              {/* <p className="text-sm font-medium p-0">Select Ingredients</p> */}
               <FormInput
                 label="Select Ingredients"
                 form={form}
@@ -155,19 +222,41 @@ export default function AddDish() {
                     variant="inverted"
                   />
                 )}
-                required
               />
-              {/* <MultiSelect
-                options={ingredients}
-                onValueChange={setSelectedIngredients}
-                placeholder="Select Ingredients"
-                variant="inverted"
-              /> */}
+              <FormInput
+                label="Select Addons"
+                form={form}
+                name="add_ons"
+                render={(field) => (
+                  <MultiSelect
+                    options={addons}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    placeholder="Select Addons"
+                    variant="inverted"
+                  />
+                )}
+              />
               <div className="flex justify-end gap-3">
                 <Button
-                  variant={"outline"}
+                  variant="outline"
                   className="w-full mt-4"
-                  onClick={() => form.reset()}
+                  onClick={() => {
+                    // Reset to initial dish data instead of empty values
+                    if (dishData) {
+                      form.reset({
+                        name: dishData.name,
+                        description: dishData.description,
+                        price: dishData.price,
+                        ingredients:
+                          dishData.ingredients?.map((i) => i.id.toString()) ||
+                          [],
+                        add_ons:
+                          dishData.add_ons?.map((a) => a.id.toString()) || [],
+                        category: dishData.category?.id.toString(),
+                      });
+                    }
+                  }}
                 >
                   Reset
                 </Button>
