@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 
 from .utils import notify_order_created
-from .models import Table ,Dish, Ingredient, AddOn, Order,Category
+from .models import Table ,Dish, Ingredient, AddOn, Order,Category,OrderItem
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,40 +74,52 @@ class DishWriteSerializer(serializers.ModelSerializer):
         model = Dish
         fields = ['id', 'name', 'description', 'price', 'ingredients', 'add_ons','category']
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    dish = serializers.PrimaryKeyRelatedField(queryset=Dish.objects.all())
+    add_ons = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=AddOn.objects.all(), required=False
+    )
+    quantity = serializers.IntegerField(min_value=1, default=1)
+
+    class Meta:
+        model = OrderItem
+        fields = ['dish', 'add_ons', 'quantity']
 
 
 class OrderSerializer(serializers.ModelSerializer):
     table = serializers.PrimaryKeyRelatedField(queryset=Table.objects.all())
-    dishes = DishSerializer(many=True, read_only=True)
-    dish_ids = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Dish.objects.all(), write_only=True
-    )
+    items = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = ['id', 'table', 'dishes', 'dish_ids', 'status','remarks', 'created_at', 'updated_at']
+        fields = ['id', 'table', 'items', 'status', 'remarks', 'created_at', 'updated_at']
 
     def create(self, validated_data):
-        dish_ids = validated_data.pop('dish_ids')
-        remarks = validated_data.pop('remarks',None)
+        items_data = validated_data.pop('items')
         order = super().create(validated_data)
-        order.dishes.set(dish_ids)
-        if remarks:
-            order.remarks = remarks
-            order.save()
 
-        for dish in order.dishes.all():
+        for item_data in items_data:
+            dish = item_data.pop('dish')
+            add_ons = item_data.pop('add_ons', [])
+            quantity = item_data.get('quantity', 1)
+
+            order_item = OrderItem.objects.create(order=order, dish=dish, quantity=quantity)
+            order_item.add_ons.set(add_ons)
+            order_item.save()
+
+            # Deduct ingredients based on quantity
             for ingredient in dish.ingredients.all():
-                if ingredient.quantity_available < 1:
+                if ingredient.quantity_available < quantity:
                     raise serializers.ValidationError(
                         f"Insufficient stock for ingredient {ingredient.name}."
                     )
-                ingredient.quantity_available -= 1
+                ingredient.quantity_available -= quantity
                 ingredient.save()
 
         notify_order_created(order)
 
         return order
+
 
 class CheckOutSerializer(serializers.ModelSerializer):
     class Meta:
