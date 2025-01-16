@@ -6,7 +6,7 @@ from .serializers import CategorySerializer, UserRegistrationSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 from .models import Category, Table, Dish, Ingredient, AddOn,Order
-from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer, CheckOutSerializer
+from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer, CheckOutSerializer,OrderReadSerializer
 import qrcode
 from io import BytesIO
 from django.core.files import File
@@ -97,6 +97,11 @@ class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
 
     @action(detail=True, methods=['patch'])
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return OrderReadSerializer
+        return OrderSerializer
+
     def update_status(self, request, pk=None):
         try:
             order = self.get_object()
@@ -113,6 +118,8 @@ class OrderViewSet(ModelViewSet):
         if self.action in ["create","list"]:
             return [AllowAny()]
         return [IsAuthenticated()]
+
+
 class CheckoutView(APIView):
     def patch(self, request, pk):
         """Handle order checkout."""

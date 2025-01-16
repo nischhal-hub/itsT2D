@@ -120,6 +120,42 @@ class OrderSerializer(serializers.ModelSerializer):
 
         return order
 
+class OrderItemReadSerializer(serializers.ModelSerializer):
+    dish = DishSerializer(read_only=True)
+    add_ons = AddOnSerializer(many=True, read_only=True)
+    quantity = serializers.IntegerField(min_value=1, default=1)
+    subtotal = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrderItem
+        fields = ['dish', 'add_ons', 'quantity', 'subtotal']
+
+    def get_subtotal(self, obj):
+        # Calculate base price from dish
+        subtotal = obj.dish.price * obj.quantity
+
+        # Add the price of any add-ons
+        for add_on in obj.add_ons.all():
+            subtotal += add_on.price * obj.quantity
+
+        return subtotal
+
+class OrderReadSerializer(serializers.ModelSerializer):
+    table = TableSerializer(read_only=True)
+    items = OrderItemReadSerializer(many=True, read_only=True)
+    total_amount = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = ['id', 'table', 'items', 'status', 'remarks',
+                 'created_at', 'updated_at', 'total_amount',
+                 'checked_out', 'payment_method']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def get_total_amount(self, obj):
+        return sum(item.dish.price * item.quantity +
+                  sum(add_on.price * item.quantity for add_on in item.add_ons.all())
+                  for item in obj.items.all())
 
 class CheckOutSerializer(serializers.ModelSerializer):
     class Meta:
