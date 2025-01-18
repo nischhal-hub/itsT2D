@@ -74,7 +74,7 @@ class DishViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def get_permissions(self):
-        if self.action == 'list':
+        if self.action in ['list','get_dishes_by_category']:
             return [AllowAny()]
         return [IsAuthenticated()]
 
@@ -90,6 +90,10 @@ class AddOnViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    def get_permissions(self):
+        if self.action == 'list':
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class OrderViewSet(ModelViewSet):
