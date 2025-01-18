@@ -11,7 +11,7 @@ export type OrderItem = {
 };
 
 export type Order = {
-  table: number;
+  table: string;
   items: OrderItem[];
   remarks: string;
 };
@@ -24,7 +24,8 @@ type OrderAction =
       payload: Partial<Omit<OrderItem, "remarks">> & { dishId: string };
     }
   | { type: "ADD_ORDER_REMARK" }
-  | { type: "RESET_ORDER" };
+  | { type: "RESET_ORDER" }
+  | { type: "SET_TABLE"; payload: {tableId:string} };
 
 export type OrderContextType = {
   order: Order;
@@ -37,7 +38,7 @@ export const OrderContext = createContext<OrderContextType | undefined>(
 );
 
 const initialOrder: Order = {
-  table: 0,
+  table: String(0),
   items: [],
   remarks: "",
 };
@@ -77,6 +78,12 @@ function orderReducer(state: Order, action: OrderAction): Order {
     }
     case "RESET_ORDER": {
       return initialOrder;
+    }
+    case "SET_TABLE": {
+      return{
+        ...state,
+        table: action.payload.tableId
+      }
     }
     default:
       return state;

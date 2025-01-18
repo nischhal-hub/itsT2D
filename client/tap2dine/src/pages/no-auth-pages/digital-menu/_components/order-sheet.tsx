@@ -4,16 +4,49 @@ import { Button } from '../../../../components/ui/button';
 import { Badge } from '../../../../components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../../../../components/ui/sheet';
 import OrderSummary from './order-summary';
+import { useAddOrderMutation } from '../../../../api/mutations/orders.mutation';
+import { Order } from '../../../../context/orderContext';
+import { TOrderType } from '../../../../schemas/order';
 
 
 const OrderSheet = () => {
     const { order } = useOrderContext();
-
+    const {mutate} = useAddOrderMutation();
     const totalPrice = order.items.reduce((sum, item) => {
         return sum + (item.totalPrice);
     }, 0);
 
     const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+   
+    const transformOrder = (order: Order): TOrderType => {
+        const transformedItems = order.items.map(item => ({
+            dish: item.dishId,
+            quantity: item.quantity,
+            add_ons: item.addons.map(addon => addon.id)
+        }));
+    
+        const remarks = order.items
+            .map(item => {
+                const excludedIngredients = item.ingredients
+                    .filter(ingredient => !ingredient.include)
+                    .map(ingredient => `No ${ingredient.name}`)
+                    .join(", ");
+    
+                return excludedIngredients ? `${item.name}: ${excludedIngredients}` : "";
+            })
+            .filter(Boolean)
+            .join("; ");
+    
+        return {
+            table: order.table,
+            items: transformedItems,
+            remarks
+        };
+    };
+    const handlePlaceOrder = ()=> {
+        const mutableData = transformOrder(order);
+        mutate(mutableData);
+    }
 
     return (
         <Sheet>
@@ -52,7 +85,7 @@ const OrderSheet = () => {
                         <p className="pb-2 mb-2 font-semibold border-b border-border">
                             Total Price: Rs. {totalPrice}
                         </p>
-                        <Button className="w-full" onClick={()=>{console.log(order)}}>Place Order</Button>
+                        <Button className="w-full" onClick={handlePlaceOrder}>Place Order</Button>
                         </div>
                     </div>
                 )}

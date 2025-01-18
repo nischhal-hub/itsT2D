@@ -59,7 +59,6 @@ export default function AddOrder({ data: dish }: ModalType<"ADD_ORDER">) {
           name: addon.name,
           price: Number(addon.price)
         })) || [],
-      remark: ""
     };
 
     dispatch({
