@@ -4,39 +4,16 @@ import { Checkbox } from "../components/ui/checkbox";
 import { useState } from "react";
 import useModalContext from "../hooks/useModalContext";
 import { Avatar } from "../components/reusables/avatar";
+import { ModalType } from "../types/modal.types";
 import { useOrderContext } from "../hooks/useOrderContext";
-const dish = {
-  id: "1",
-  name: "Margherita Pizza",
-  description: "Classic pizza with tomato sauce, mozzarella, and basil",
-  price: 12.99,
-  ingredients: [
-    { id: "1", name: "Tomato Sauce", default: true },
-    { id: "2", name: "Mozzarella", default: true },
-    { id: "3", name: "Basil", default: true },
-    { id: "4", name: "Olive Oil", default: true },
-  ],
-  addons: [
-    { id: "1", name: "Extra Cheese", price: 1.5 },
-    { id: "2", name: "Mushrooms", price: 1 },
-    { id: "3", name: "Olives", price: 1 },
-    { id: "4", name: "Pepperoni", price: 2 },
-  ],
-  category: {
-    id: 9,
-    name: "Dinner",
-    description: "",
-  },
-};
 
-export default function AddOrder() {
+export default function AddOrder({ data: dish }: ModalType<"ADD_ORDER">) {
   const { closeModal } = useModalContext();
-  const { dispatch, order } = useOrderContext();
+  const {dispatch} = useOrderContext();
   const [quantity, setQuantity] = useState(1);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
-    dish.ingredients.filter((ing) => ing.default).map((ing) => ing.id),
+    dish?.ingredients.map((ing) => ing.id) || []
   );
-
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
 
   const handleIngredientToggle = (ingredientId: string) => {
@@ -56,55 +33,53 @@ export default function AddOrder() {
   };
 
   const totalPrice = (
-    dish.price * quantity +
+    (Number(dish?.price) || 0) * quantity +
     selectedAddons.reduce((sum, addonId) => {
-      const addon = dish.addons.find((a) => a.id === addonId);
-      return sum + (addon ? addon.price : 0);
+      const addon = dish?.add_ons.find((a) => a.id === addonId);
+      return sum + (addon ? Number(addon.price) : 0);
     }, 0)
   ).toFixed(2);
 
   const handleAddToOrder = () => {
+    const orderItem = {
+      dishId: dish?.id || "",
+      name: dish?.name || "",
+      quantity: quantity,
+      price: Number(dish?.price),
+      totalPrice:Number(totalPrice),
+      ingredients: dish?.ingredients.map(ing => ({
+        id: ing.id,
+        name: ing.name,
+        include: selectedIngredients.includes(ing.id)
+      })) || [],
+      addons: dish?.add_ons
+        .filter(addon => selectedAddons.includes(addon.id))
+        .map(addon => ({
+          id: addon.id,
+          name: addon.name,
+          price: Number(addon.price)
+        })) || [],
+      remark: ""
+    };
+
     dispatch({
       type: "ADD_ITEM",
-      payload: {
-        dishId: dish.id,
-        name: dish.name,
-        quantity,
-        ingredients: dish.ingredients.map((ing) => ({
-          id: ing.id,
-          name: ing.name,
-          include: selectedIngredients.includes(ing.id),
-        })),
-        addons: dish.addons.filter((addon) =>
-          selectedAddons.includes(addon.id),
-        ),
-        remark: `Remove ingredients from ${dish.name}: ${dish.ingredients
-          .filter((ing) => !selectedIngredients.includes(ing.id))
-          .map((ing) => ing.name)
-          .join(", ")} `,
-      },
+      payload: orderItem
     });
 
     closeModal("ADD_ORDER");
   };
-
-  console.log(order);
-
+  
   return (
     <>
       <div className="grid gap-4 py-4">
         <div className="flex items-center gap-4">
-          <Avatar name={dish.name} />
-          <div>
-            <p className="capitalize font-bold">{dish.name}</p>
-            <p className="text-gray-600">{dish.category.name}</p>
-          </div>
+          <Avatar name={dish?.name} />
+          <p className="capitalize font-semibold">{dish?.name}</p>
         </div>
-        <p className="text-gray-600">{dish.description}</p>
+        <p className="text-gray-600">{dish?.description}</p>
         <div className="flex justify-between items-center">
-          <span className="text-2xl font-bold">
-            Rs. {dish.price.toFixed(2)}
-          </span>
+          <span className="text-2xl font-bold">Rs. {(Number(dish?.price).toFixed(2) || 0)}</span>
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"
@@ -126,46 +101,54 @@ export default function AddOrder() {
         <div>
           <h3 className="text-lg font-semibold mb-2">Customize Ingredients</h3>
           <div className="space-y-2">
-            {dish.ingredients.map((ingredient) => (
-              <div key={ingredient.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`ingredient-${ingredient.id}`}
-                  checked={selectedIngredients.includes(ingredient.id)}
-                  onCheckedChange={() => handleIngredientToggle(ingredient.id)}
-                />
-                <label
-                  htmlFor={`ingredient-${ingredient.id}`}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {ingredient.name}
-                </label>
-              </div>
-            ))}
+            {dish?.ingredients.length ? (
+              dish.ingredients.map((ingredient) => (
+                <div key={ingredient.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`ingredient-${ingredient.id}`}
+                    checked={selectedIngredients.includes(ingredient.id)}
+                    onCheckedChange={() => handleIngredientToggle(ingredient.id)}
+                  />
+                  <label
+                    htmlFor={`ingredient-${ingredient.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {ingredient.name}
+                  </label>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm italic text-gray-600">No ingredients available.</p>
+            )}
           </div>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-2">Add-ons</h3>
           <div className="space-y-2">
-            {dish.addons.map((addon) => (
-              <div key={addon.id} className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`addon-${addon.id}`}
-                    checked={selectedAddons.includes(addon.id)}
-                    onCheckedChange={() => handleAddonToggle(addon.id)}
-                  />
-                  <label
-                    htmlFor={`addon-${addon.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {addon.name}
-                  </label>
+            {dish?.add_ons.length ? (
+              dish.add_ons.map((addon) => (
+                <div key={addon.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`addon-${addon.id}`}
+                      checked={selectedAddons.includes(addon.id)}
+                      onCheckedChange={() => handleAddonToggle(addon.id)}
+                    />
+                    <label
+                      htmlFor={`addon-${addon.id}`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {addon.name}
+                    </label>
+                  </div>
+                  <span className="text-sm font-semibold">
+                    Rs. {Number(addon.price).toFixed(2)}
+                  </span>
                 </div>
-                <span className="text-sm font-semibold">
-                  Rs. {addon.price.toFixed(2)}
-                </span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm italic text-gray-600">No add-ons available.</p>
+            )}
           </div>
         </div>
         <div className="flex justify-between items-center pt-4 border-t">
@@ -177,7 +160,11 @@ export default function AddOrder() {
         <Button variant="outline" onClick={() => closeModal("ADD_ORDER")}>
           Cancel
         </Button>
-        <Button onClick={handleAddToOrder}>Add to Order</Button>
+        <Button
+          onClick={handleAddToOrder}
+        >
+          Add to Order
+        </Button>
       </div>
     </>
   );

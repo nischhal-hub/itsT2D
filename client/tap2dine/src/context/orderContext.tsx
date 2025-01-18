@@ -1,15 +1,16 @@
 import React, { createContext, useReducer, ReactNode } from "react";
 
-type OrderItem = {
+export type OrderItem = {
   dishId: string;
   name: string;
   quantity: number;
+  price: number;
   ingredients: { id: string; name: string; include: boolean }[];
   addons: { id: string; name: string; price: number }[];
-  remark: string;
+  totalPrice:number;
 };
 
-type Order = {
+export type Order = {
   table: number;
   items: OrderItem[];
   remarks: string;
@@ -22,7 +23,6 @@ type OrderAction =
       type: "UPDATE_ITEM";
       payload: Partial<Omit<OrderItem, "remarks">> & { dishId: string };
     }
-  | { type: "ADD_ITEM_REMARK"; payload: { dishId: string; remark: string } }
   | { type: "ADD_ORDER_REMARK" }
   | { type: "RESET_ORDER" };
 
@@ -70,17 +70,7 @@ function orderReducer(state: Order, action: OrderAction): Order {
         ...state,
         items: state.items.map((item) =>
           item.dishId === action.payload.dishId
-            ? { ...item, ...action.payload }
-            : item,
-        ),
-      };
-    }
-    case "ADD_ITEM_REMARK": {
-      return {
-        ...state,
-        items: state.items.map((item) =>
-          item.dishId === action.payload.dishId
-            ? { ...item, remark: action.payload.remark }
+            ? { ...item, ...action.payload, totalPrice: action.payload.quantity ? item.totalPrice + (item.price * (action.payload.quantity - item.quantity)) : item.totalPrice }
             : item,
         ),
       };

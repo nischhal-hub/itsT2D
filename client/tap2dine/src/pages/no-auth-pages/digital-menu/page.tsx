@@ -1,89 +1,104 @@
-import { PhoneCall, Soup } from "lucide-react";
+import { PhoneCall } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import DishCard from "./_components/dish-card";
 import { toast } from "sonner";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../../../components/ui/sheet"
-import OrderSummary from "./_components/order-summary";
-import { Fragment } from "react/jsx-runtime";
 import { DIGITAL_MENU_LOGO } from "../../../constants/images";
 import PoweredBy from "./_components/powered-by";
+import { useFetchDishes } from "../../../api/queries/dish.query";
+import { useFetchCategories, useFetchDishesByCategory } from "../../../api/queries/category.query";
+import { TCategoryResopnseType, TDishResponseType } from "../../../types/response.types";
+import { useState } from "react";
+import OrderSheet from "./_components/order-sheet";
 
 export default function DigitalMenu() {
+  const [selectedCategory, setSelectedCategory] = useState<TCategoryResopnseType | null>(null);
+  const { data: allDishesData } = useFetchDishes();
+  const { data: categoriesData } = useFetchCategories();
+  const { data: dishesByCategory } = useFetchDishesByCategory({
+    categoryId: selectedCategory?.id || '',
+  });
+
+
+  const handleCategoryClick = (category: TCategoryResopnseType) => {
+    setSelectedCategory(category);
+  };
+
+  const displayedDishes = selectedCategory ? dishesByCategory : allDishesData;
   return (
     <div className="w-full h-auto flex justify-center bg-primary">
-      <div className="max-w-md min-h-screen gap-2 p-2 border-2 border-secondary bg-background relative">
-      <PoweredBy />
-      {/* logo section */}
-      <div className="flex flex-col items-center justify-center pt-4">
-        <div className="size-20 object-contain">
-          <img src={DIGITAL_MENU_LOGO} alt="LOGO" />
-        </div>
-        <p className="text-lg text-stone-950 font-medium pt-2">Motomania Cafe & Workshop</p>
-      </div>
-
-      <div className="sticky top-0 bg-background">
-        {/* button section */}
-        <div className="py-4 flex items-center justify-center gap-4 mt-4 ">
-          <Button variant="secondary" className="text-white" onClick={() => toast("Waiter called.",{
-            position: "top-right",
-            duration: 3000,
-            description: "Please wait. A waiter will be at your service soon."
-          })}><PhoneCall />Call Waiter</Button>
-          <Sheet>
-            <SheetTrigger><Button variant="outline"><Soup />My Orders</Button></SheetTrigger>
-            <SheetContent className="overflow-y-scroll">
-              <SheetHeader className="mb-4">
-                <SheetTitle className="text-left">My orders</SheetTitle>
-              </SheetHeader>
-              <div className="space-y-4">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <Fragment key={i}>
-                    <OrderSummary />
-                  </Fragment>
-                ))}
-              </div>
-              <div className="fixed bottom-0 w-72 py-4 bg-background">
-                <p className="pb-2 mb-2 font-semibold border-b-2 border-border">Total Price: Rs 2000</p>
-
-                <Button className="w-full">Place order</Button>
-              </div>
-            </SheetContent>
-          </Sheet>
+      <div className="min-w-md min-h-screen gap-2 p-2 border-2 border-secondary bg-background relative">
+        <PoweredBy />
+        {/* logo section */}
+        <div className="flex flex-col items-center justify-center pt-4">
+          <div className="size-20 object-contain">
+            <img src={DIGITAL_MENU_LOGO} alt="LOGO" />
+          </div>
+          <p className="text-lg text-stone-950 font-medium pt-2">
+            Motomania Cafe & Workshop
+          </p>
         </div>
 
-        {/* dish type section */}
-        <div className=" mt-4 flex items-center justify-evenly overflow-y-scroll gap-2 ">
-          {
-            Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="px-2 py-[2px] bg-black text-white rounded-md">
-                <p className="text-nowrap text-base">Dish type {i + 1}</p>
-              </div>
-            ))
-          }
-        </div>
-        <p className="text-xl font-semibold mt-4">Dish Type 1</p>
+        <div className="sticky top-0 bg-background">
+          {/* button section */}
+          <div className="py-4 flex items-center justify-center gap-4 mt-4 ">
+            <Button
+              variant="secondary"
+              className="text-white"
+              onClick={() =>
+                toast("Waiter called.", {
+                  position: "top-right",
+                  duration: 3000,
+                  description:
+                    "Please wait. A waiter will be at your service soon.",
+                })
+              }
+            >
+              <PhoneCall />
+              Call Waiter
+            </Button>
+            <OrderSheet />
+          </div>
 
-      </div>
-      {/* dishes section */}
-      <div className="mt-4">
-        <div className="grid grid-cols-2 mt-4 gap-2 pb-4">
-          <DishCard />
-          <DishCard />
-          <DishCard />
-          <DishCard />
-          <DishCard />
-          <DishCard />
-          <DishCard />
+          {/* dish type section */}
+          <div className=" mt-4 flex items-center justify-evenly gap-2 ">
+            <div
+              onClick={() => setSelectedCategory(null)}
+              className={`px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:shadow-md 
+                ${!selectedCategory
+                  ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                } 
+                cursor-pointer select-none active:scale-95`}
+            >
+              <p className="text-nowrap text-sm font-medium">All Dishes</p>
+            </div>
+            {categoriesData?.map((category: TCategoryResopnseType, i: number) => (
+              <div
+                key={i}
+                onClick={() => handleCategoryClick(category)}
+                className={`px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:shadow-md
+                ${selectedCategory?.id === category.id
+                    ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                  } 
+                cursor-pointer select-none active:scale-95`}
+              >
+                <p className="text-nowrap text-sm font-medium">{category.name}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xl font-semibold mt-4">{selectedCategory ? selectedCategory.name : 'All Dishes'}</p>
+        </div>
+        {/* dishes section */}
+        <div className="mt-4">
+          <div className="grid grid-cols-2 mt-4 gap-2 pb-4">
+
+            {displayedDishes?.length === 0 ? <p className="text-center font-semibold text-lg">No Dishes found</p> : displayedDishes?.map((dish: TDishResponseType) => (
+              <DishCard key={dish.id} data={dish} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
-    </div>
-    
-  )
+  );
 }
