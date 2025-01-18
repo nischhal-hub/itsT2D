@@ -39,18 +39,24 @@ class TableViewSet(ModelViewSet):
         table = serializer.save()
 
         # Generate the URL for the QR code
-        qr_url = f"http://localhost:5173/digi-menu/{table.id}"
+        qr_url = f"http://192.168.1.78:5173/digi-menu/{table.id}"
 
         # Save the URL in the qr_code field
         table.qr_code = qr_url
         table.save()
 
         headers = self.get_success_headers(serializer.data)
+        
         return Response(
             {"message": "Table created successfully.", "qr_code_url": qr_url},
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
+
+    def get_permissions(self):
+        if self.action in ['list']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
 class DishViewSet(ModelViewSet):
