@@ -112,6 +112,7 @@ class OrderViewSet(ModelViewSet):
             return OrderReadSerializer
         return OrderSerializer
 
+    @action(detail=True, methods=['patch'], url_path='update_status')
     def update_status(self, request, pk=None):
         try:
             order = self.get_object()
