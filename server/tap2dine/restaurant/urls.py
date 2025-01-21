@@ -1,6 +1,6 @@
 from django.urls import path,include
 from .views import CategoryViewSet, TestAuthView
-from .views import UserRegistrationView,TableViewSet, DishViewSet, IngredientViewSet, AddOnViewSet,OrderViewSet,CheckoutView
+from .views import UserRegistrationView,TableViewSet, DishViewSet, IngredientViewSet, AddOnViewSet,OrderViewSet,CheckoutView,InitiatePaymentView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -15,5 +15,6 @@ urlpatterns = [
     path('test-auth/', TestAuthView.as_view(), name='test_auth'),
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
     path('orders/<int:pk>/checkout/', CheckoutView.as_view(), name='order-checkout'),
+    path('initiate-payment/', InitiatePaymentView.as_view(), name='initiate-payment'),
     path('',include(router.urls)),
 ]

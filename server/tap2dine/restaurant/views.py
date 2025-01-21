@@ -1,3 +1,6 @@
+import json
+import requests
+from decouple import config
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -11,6 +14,7 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from rest_framework.decorators import action
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -147,3 +151,33 @@ class CheckoutView(APIView):
                 "order": serializer.data
             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InitiatePaymentView(APIView):
+    def post(self, request,*args, **kwargs):
+        khalti_secret_key = config('KHALTI_SECRET_KEY')
+        payment_url = 'https://dev.khalti.com/api/v2/epayment/initiate/'
+
+        data = json.loads(request.body)
+        
+        payload={
+                "return_url": "https://example.com/payment/",
+                "website_url": "https://example.com/",
+                "amount": data.get('amount'),
+                "purchase_order_id": data.get('purchase_order_id'),
+                "purchase_order_name": data.get('purchase_order_name'),
+                "customer_info": {
+                    "name": data.get('customer_name'),
+                    "email": data.get('customer_email'),
+                    "phone": data.get('customer_phone')
+                },
+            }
+        
+        headers = {
+            'Authorization': f'key {khalti_secret_key}',
+            'Content-Type': 'application/json',
+        }
+        response = requests.post(payment_url, json=payload, headers=headers)
+        if response.status_code == 200:
+            return JsonResponse(response.json())
+        else:
+            return JsonResponse({'error': 'Failed to initiate payment'}, status=response.status_code)
