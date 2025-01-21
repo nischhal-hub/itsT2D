@@ -149,7 +149,7 @@ class OrderReadSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'table', 'items', 'status', 'remarks',
                  'created_at', 'updated_at', 'total_amount',
-                 'checked_out', 'payment_method']
+                 'checked_out', 'payment_method','customer_name','customer_email','customer_phone']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def get_total_amount(self, obj):

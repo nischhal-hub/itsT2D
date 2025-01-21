@@ -181,3 +181,29 @@ class InitiatePaymentView(APIView):
             return JsonResponse(response.json())
         else:
             return JsonResponse({'error': 'Failed to initiate payment'}, status=response.status_code)
+        
+class VerifyPaymentView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Replace with your secret key
+        khalti_secret_key = config('KHALTI_SECRET_KEY')
+        lookup_url = 'https://dev.khalti.com/api/v2/epayment/lookup/'
+
+        # Get pidx from the request
+        pidx = request.data.get('pidx')
+        if not pidx:
+            return Response({'error': 'pidx is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Payload for lookup
+        payload = {'pidx': pidx}
+        headers = {
+            'Authorization': f'Key {khalti_secret_key}',
+        }
+
+        # Send request to Khalti
+        response = requests.post(lookup_url, json=payload, headers=headers)
+        if response.status_code == 200:
+            # Payment details from Khalti
+            payment_data = response.json()
+            return Response(payment_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Failed to verify payment', 'details': response.json()}, status=response.status_code)
