@@ -16,6 +16,9 @@ import ModalX from "./modals/modal";
 import AddDish from "./pages/auth-pages/menu/(dish-form)/add-dish";
 import AddonPage from "./pages/auth-pages/add-ons/page";
 import EditDish from "./pages/auth-pages/menu/(dish-form)/edit-dish";
+import OrderCheckout from "./pages/auth-pages/orders/[orderid]/checkout/page";
+import CheckoutSuccess from "./pages/auth-pages/orders/[orderid]/checkout/success-page";
+import KhaltiPayment from "./pages/auth-pages/orders/[orderid]/checkout/khalti-payment-page";
 
 function App() {
   return (
@@ -37,6 +40,9 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="orders" element={<Orders />} />
             <Route path="orders/:id" element={<SingleOrder />} />
+            <Route path="orders/:id/checkout" element={<OrderCheckout />} />
+            <Route path="checkout/:id/success" element={<CheckoutSuccess />} />
+            <Route path="checkout/:id/khalti" element={<KhaltiPayment />} />
             <Route path="menu" element={<MenuPage />} />
             <Route path="menu/add-dish" element={<AddDish />} />
             <Route path="menu/edit-dish/:id" element={<EditDish />} />

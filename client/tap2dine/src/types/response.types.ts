@@ -32,7 +32,7 @@ export type TDishResponseType = {
 
 export type TOrderResponseType = {
   id: string;
-  table: TTableResponseType;
+  table: Omit<TTableResponseType, "created_at">;
   items: {
       dish: TDishResponseType;
       add_ons: TAddonResopnseType[];
