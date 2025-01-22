@@ -186,3 +186,13 @@ class CheckOutSerializer(serializers.ModelSerializer):
         instance.customer_phone = validated_data.get('customer_phone', instance.customer_phone)
         instance.save()
         return instance
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = [
+            'id', 'table', 'total_amount', 'payment_method',
+            'customer_name', 'customer_email', 'customer_phone',
+            'status', 'created_at', 'updated_at'
+        ]
+        read_only_fields = fields

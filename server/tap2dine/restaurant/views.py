@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import CategorySerializer, UserRegistrationSerializer
+from .serializers import CategorySerializer, TransactionSerializer, UserRegistrationSerializer
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
 from .models import Category, Table, Dish, Ingredient, AddOn,Order
 from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer, CheckOutSerializer,OrderReadSerializer
 import qrcode
@@ -84,7 +84,7 @@ class DishViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def get_permissions(self):
-        if self.action in ['list','get_dishes_by_category']:
+        if self.action in ['list','get_dishes_by_category','retrieve']:
             return [AllowAny()]
         return [IsAuthenticated()]
 
@@ -207,3 +207,7 @@ class VerifyPaymentView(APIView):
             return Response(payment_data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Failed to verify payment', 'details': response.json()}, status=response.status_code)
+
+class TransactionViewSet(ReadOnlyModelViewSet):
+    queryset = Order.objects.filter(status='Completed', checked_out=True)
+    serializer_class = TransactionSerializer

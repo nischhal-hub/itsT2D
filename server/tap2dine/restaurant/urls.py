@@ -1,6 +1,6 @@
 from django.urls import path,include
 from .views import CategoryViewSet, TestAuthView
-from .views import UserRegistrationView,TableViewSet, DishViewSet, IngredientViewSet, AddOnViewSet,OrderViewSet,CheckoutView,InitiatePaymentView,VerifyPaymentView
+from .views import UserRegistrationView,TableViewSet, DishViewSet, IngredientViewSet, AddOnViewSet,OrderViewSet,CheckoutView,InitiatePaymentView,VerifyPaymentView,TransactionViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -10,6 +10,7 @@ router.register(r'add-ons', AddOnViewSet, basename='addon')
 router.register(r'tables',TableViewSet,basename='table')
 router.register(r'orders', OrderViewSet, basename='order')
 router.register(r'categories', CategoryViewSet, basename='category')
+router.register(r'transactions', TransactionViewSet, basename='transaction')
 
 urlpatterns = [
     path('test-auth/', TestAuthView.as_view(), name='test_auth'),
