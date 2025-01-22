@@ -67,9 +67,14 @@ class DishViewSet(ModelViewSet):
     queryset = Dish.objects.all()
 
     def get_serializer_class(self):
-        if self.action in ['create', 'update']:
+        if self.action in ['create', 'update', 'partial_update']:
             return DishWriteSerializer
         return DishSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        # Dynamically call the serializer class
+        serializer_class = self.get_serializer_class()
+        return serializer_class(*args, **kwargs)
 
     @action(detail=False, methods=['get'], url_path='category/(?P<category_id>\d+)/dishes')
     def get_dishes_by_category(self, request, category_id=None):
