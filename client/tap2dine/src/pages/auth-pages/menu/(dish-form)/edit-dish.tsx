@@ -1,7 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
 import { useFetchIngredients } from "../../../../api/queries/ingredients.query";
-
 
 
 import PageHeader from "../../../../components/reusables/page-header";
@@ -65,6 +62,8 @@ export default function EditDish() {
         <PageHeader title="Edit Dish" />
       </div>
       <div className="max-w-2xl border rounded-md p-4">
+        {
+        dishData && ingredientsData && addonsData && categories &&
         <EditDishForm 
           dishId={dishId || ""}
           dishData={dishData}
@@ -72,6 +71,7 @@ export default function EditDish() {
           addons={addonsData}
           ingredients={ingredientsData}
         />
+        }
       </div>
     </div>
   );

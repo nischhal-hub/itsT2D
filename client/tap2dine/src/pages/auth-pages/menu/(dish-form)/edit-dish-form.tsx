@@ -20,6 +20,7 @@ import {
     TIngredientResponseType,
 } from "../../../../types/response.types";
 import { useNavigate } from 'react-router';
+import { useQueryClient } from "@tanstack/react-query";
 
 type TEditDishFormProps = {
     dishId: string;
@@ -32,6 +33,7 @@ export default function EditDishForm({
     dishId, dishData, categories, addons, ingredients
 }: TEditDishFormProps) {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const form = useForm<TDishType>({
         resolver: zodResolver(dishSchema),
         mode: "onChange",
@@ -55,6 +57,7 @@ export default function EditDishForm({
         mutate(data, {
             onSuccess: () => {
                 navigate("/menu");
+                queryClient.invalidateQueries({ queryKey: ["dishes"] });
             },
         });
     };
@@ -126,7 +129,7 @@ export default function EditDishForm({
                                     label: ingredient.name,
                                     value: ingredient.id.toString(),
                                 }))}
-                                value={field.value}
+                                defaultValue={field.value as string[] || []}
                                 onValueChange={field.onChange}
                                 placeholder="Select Ingredients"
                                 variant="inverted"
@@ -137,18 +140,19 @@ export default function EditDishForm({
                         label="Select Addons"
                         form={form}
                         name="add_ons"
-                        render={(field) => (
-                            <MultiSelect
+                        render={(field) => {
+                            console.log(field.value)
+                            return(<MultiSelect
                                 options={addons?.map((addon: TAddonResopnseType) => ({
                                     label: addon.name,
                                     value: addon.id.toString(),
                                 })) || []}
-                                value={field.value}
+                                defaultValue={field.value as string[] || []}
                                 onValueChange={field.onChange}
                                 placeholder="Select Addons"
                                 variant="inverted"
-                            />
-                        )}
+                            />)
+                        }}
                     />
                     <div className="flex justify-end gap-3">
                         <Button
