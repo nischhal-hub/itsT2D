@@ -19,6 +19,7 @@ import EditDish from "./pages/auth-pages/menu/(dish-form)/edit-dish";
 import OrderCheckout from "./pages/auth-pages/orders/[orderid]/checkout/page";
 import CheckoutSuccess from "./pages/auth-pages/orders/[orderid]/checkout/success-page";
 import KhaltiPayment from "./pages/auth-pages/orders/[orderid]/checkout/khalti-payment-page";
+import TransactionPage from "./pages/auth-pages/transactions/page";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="category" element={<CategoryPage />} />
             <Route path="add-ons" element={<AddonPage />} />
+            <Route path="transactions" element={<TransactionPage />} />
           </Route>
           <Route path="/digi-menu/:tableId" element={<DigitalMenu />} />
         </Routes>

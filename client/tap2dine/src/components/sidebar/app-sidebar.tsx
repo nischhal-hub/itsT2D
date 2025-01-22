@@ -6,6 +6,7 @@ import {
   ShoppingBasket,
   Utensils,
   LeafyGreen,
+  Banknote,
 } from "lucide-react";
 
 import {
@@ -59,6 +60,11 @@ const items = [
     title: "Add-ons",
     url: "/add-ons",
     icon: LeafyGreen,
+  },
+  {
+    title: "Transactions",
+    url: "/transactions",
+    icon: Banknote,
   },
 ];
 
