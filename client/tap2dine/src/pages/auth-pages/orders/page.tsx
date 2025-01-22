@@ -1,17 +1,15 @@
-import React from 'react';
 import PageHeader from "../../../components/reusables/page-header";
 import SingleOrderCard from "./_components/single-order-card";
 import { useNavigate } from "react-router";
 import { useFetchOrders } from "../../../api/queries/orders.query";
 import { TOrderResponseType } from "../../../types/response.types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { any } from 'zod';
 
 export default function Orders() {
   const navigate = useNavigate();
   const { data, isLoading } = useFetchOrders();
 
-  const checkedOutOrders = data?.filter((order:any) => order?.checked_out) || [];
+  const checkedOutOrders = data?.filter((order:any) => order?.checked_out) || []; //TODO FIX TYPES
   const pendingOrders = data?.filter((order:any) => !order?.checked_out) || [];
 
   const OrderGrid = ({ orders }: { orders: TOrderResponseType[] }) => (
