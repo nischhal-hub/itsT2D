@@ -5,9 +5,11 @@ import {Form} from "../../../components/ui/form";
 import { TLoginType, loginSchema } from "../../../schemas/login";
 import FormInput from "../../../components/reusables/form-input";
 import { useLoginMutation } from "../../../api/mutations/auth.mutation";
+import useAuthContext from "../../../hooks/useAuthContext";
 
 
 export default function LoginForm() {
+    const {setIsAuthenticated} = useAuthContext();
     const form = useForm<TLoginType>({
         resolver: zodResolver(loginSchema),
         mode: "onChange",
@@ -19,7 +21,11 @@ export default function LoginForm() {
 
     const {mutate} = useLoginMutation();
     const onSubmit = (data: TLoginType) => {
-        mutate(data)
+        mutate(data,{
+            onSuccess: () => {
+                setIsAuthenticated(true);
+            }
+        })
     }
 
     return (

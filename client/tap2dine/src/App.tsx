@@ -26,7 +26,6 @@ function App() {
     <>
       <Toaster richColors closeButton />
       <ModalX />
-      <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -55,7 +54,6 @@ function App() {
           </Route>
           <Route path="/digi-menu/:tableId" element={<DigitalMenu />} />
         </Routes>
-      </BrowserRouter>
     </>
   );
 }

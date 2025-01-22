@@ -19,6 +19,6 @@ export const paymentApi = axios.create({
   baseURL: import.meta.env.VITE_KHALTI_URL,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": `key ${import.meta.env.VITE_KHALTI_SECRET_KEY}`,
+    Authorization: `key ${import.meta.env.VITE_KHALTI_SECRET_KEY}`,
   },
 });

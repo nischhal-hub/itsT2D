@@ -5,6 +5,7 @@ type AuthContextType = {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
     logout: () => void
     isLoading: boolean
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
@@ -12,12 +13,7 @@ export const AuthContext = createContext<AuthContextType | null>(null)
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
-    useEffect(()=>{
-        const token = localStorage.getItem('accessToken');
-        if(token) setIsAuthenticated(true);
-        setIsLoading(false);
-    },[])
-
+    
     const logout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
@@ -25,7 +21,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated, logout, isLoading}}>
+        <AuthContext.Provider value={{isAuthenticated, setIsAuthenticated, logout, isLoading,setIsLoading}}>
             {children}
         </AuthContext.Provider>
     )
