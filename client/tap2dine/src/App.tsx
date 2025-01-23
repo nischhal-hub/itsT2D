@@ -20,6 +20,7 @@ import OrderCheckout from "./pages/auth-pages/orders/[orderid]/checkout/page";
 import CheckoutSuccess from "./pages/auth-pages/orders/[orderid]/checkout/success-page";
 import KhaltiPayment from "./pages/auth-pages/orders/[orderid]/checkout/khalti-payment-page";
 import TransactionPage from "./pages/auth-pages/transactions/page";
+import SuccessPage from "./pages/no-auth-pages/customer-success-page/page";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <Route path="transactions" element={<TransactionPage />} />
           </Route>
           <Route path="/digi-menu/:tableId" element={<DigitalMenu />} />
+          <Route path="/payment-success" element={<SuccessPage />} />
         </Routes>
     </>
   );
