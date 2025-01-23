@@ -43,7 +43,7 @@ class TableViewSet(ModelViewSet):
         table = serializer.save()
 
         # Generate the URL for the QR code
-        qr_url = f"http://192.168.1.78:5173/digi-menu/{table.id}"
+        qr_url = f"{config('DIGI_MENU_URL')}{table.id}"
 
         # Save the URL in the qr_code field
         table.qr_code = qr_url
