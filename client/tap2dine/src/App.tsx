@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import Layout from "./pages/auth-pages/layout";
 import Dashboard from "./pages/auth-pages/dashboard/page";
 import Orders from "./pages/auth-pages/orders/page";

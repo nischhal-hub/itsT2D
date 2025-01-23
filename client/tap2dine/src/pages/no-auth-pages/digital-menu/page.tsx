@@ -89,7 +89,7 @@ export default function DigitalMenu() {
 
           {/* Categories */}
           <div className="mt-4 overflow-x-auto pb-2">
-            <div className="flex gap-2 min-w-min">
+            <div className="flex gap-2 min-w-min py-2 px-1">
               <div
                 onClick={() => setSelectedCategory(null)}
                 className={`px-3 py-1.5 rounded-full shrink-0 transition-all duration-200 shadow-sm hover:shadow-md 

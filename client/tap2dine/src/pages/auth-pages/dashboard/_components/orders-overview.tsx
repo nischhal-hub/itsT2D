@@ -4,18 +4,19 @@ import { Button } from '../../../../components/ui/button'
 import { ChevronRight } from 'lucide-react'
 import { Badge } from '../../../../components/ui/badge'
 import { TOrderResponseType } from '../../../../types/response.types'
+import { cn } from '../../../../lib/utils'
 
 
 export function OrdersOverview({data:orders}:{data:TOrderResponseType[]}) {
   // Determine status badge color
   const getStatusBadgeVariant = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed':
+    switch (status) {
+      case 'Completed':
         return 'default'
-      case 'pending':
-        return 'warning'
-      case 'in progress':
+      case 'Pending':
         return 'secondary'
+      case 'Preparing':
+        return 'outline'
       default:
         return 'outline'
     }
@@ -54,7 +55,7 @@ export function OrdersOverview({data:orders}:{data:TOrderResponseType[]}) {
                   <p className="font-semibold">{order.customer_name}</p>
                   <Badge 
                     variant={getStatusBadgeVariant(order.status)}
-                    className="text-xs"
+                    className={cn('text-xs', order.status === 'Pending' && 'text-yellow-600')}
                   >
                     {order.status}
                   </Badge>
