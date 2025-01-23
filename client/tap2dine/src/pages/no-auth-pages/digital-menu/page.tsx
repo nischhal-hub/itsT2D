@@ -20,7 +20,7 @@ export default function DigitalMenu() {
   const [selectedCategory, setSelectedCategory] = useState<TCategoryResopnseType | null>(null);
   const { data: allDishesData,isLoading:isLoadingDishes } = useFetchDishes();
   const { data: categoriesData,isLoading:isLoadingCategories } = useFetchCategories();
-  const { data: dishesByCategory,isLoading:isLoadingCategoryDishes } = useFetchDishesByCategory({
+  const { data: dishesByCategory } = useFetchDishesByCategory({
     categoryId: selectedCategory?.id || '',
   });
   const { data: tables, isLoading: isLoadingTables } = useFetchTables();

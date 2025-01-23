@@ -62,7 +62,7 @@ const OrderSheet = () => {
                 setIsDownloadable(true);
                 toast.success('Order placed successfully!');
             },
-            onError: (error) => {
+            onError: () => {
                 toast.error('Failed to place order');
             }
         });
