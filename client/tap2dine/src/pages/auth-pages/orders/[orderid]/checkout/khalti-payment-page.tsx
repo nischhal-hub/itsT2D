@@ -53,7 +53,6 @@ export default function KhaltiPayment() {
                     if (response.data.status === 'Completed') {
                         setPaymentStatus('success');
 
-                        // Prepare checkout data
                         const checkoutData = {
                             total_amount: paymentData.amount,
                             payment_method: 'khalti',
@@ -62,21 +61,20 @@ export default function KhaltiPayment() {
                             customer_email: paymentData.customerInfo.email || ''
                         };
 
-                        // Perform checkout mutation
                         checkoutMutate(checkoutData, {
                             onSuccess: () => {                   
                                 navigate(`/checkout/${orderId}/success`);
                             },
                             onError: (error:any) => {
                                 console.error('Checkout failed:', error);
-                                // Optionally handle checkout error
+                               
                             }
                         });
                     }
                 },
                 onError: (error) => {
                     console.error('Payment status check failed:', error);
-                    // Optionally handle payment status error
+                   
                 }
             });
         } catch (error) {

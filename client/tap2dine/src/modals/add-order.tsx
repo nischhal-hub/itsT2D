@@ -36,7 +36,7 @@ export default function AddOrder({ data: dish }: ModalType<"ADD_ORDER">) {
     (Number(dish?.price) || 0) * quantity +
     selectedAddons.reduce((sum, addonId) => {
       const addon = dish?.add_ons.find((a) => a.id === addonId);
-      return sum + (addon ? Number(addon.price) : 0);
+      return sum + (addon ? Number(addon.price) * quantity : 0);
     }, 0)
   ).toFixed(2);
 

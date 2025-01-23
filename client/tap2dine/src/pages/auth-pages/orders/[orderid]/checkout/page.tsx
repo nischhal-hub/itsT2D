@@ -96,6 +96,10 @@ export default function OrderCheckout() {
                 customer_name: customerInfo.name,
                 customer_phone: customerInfo.phone, //TODO add zod validation here
                 customer_email: customerInfo?.email || ""
+            },{
+                onSuccess: () => {
+                    navigate(`/checkout/${orderId}/success`)
+                }
             })
             
         } catch (error) {
