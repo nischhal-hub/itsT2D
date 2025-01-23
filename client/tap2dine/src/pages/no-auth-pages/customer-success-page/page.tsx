@@ -35,11 +35,11 @@ const SuccessPage = () => {
                         </li>
                         <li className="flex items-center text-gray-700">
                             <DollarSign className="w-5 h-5 mr-2 text-gray-500" />
-                            <span><strong>Amount Paid:</strong> NPR {amount}</span>
+                            <span><strong>Amount Paid:</strong> NPR {Number(amount)/100}</span>
                         </li>
                         <li className="flex items-center text-gray-700">
                             <DollarSign className="w-5 h-5 mr-2 text-gray-500" />
-                            <span><strong>Total Amount:</strong> NPR {total_amount}</span>
+                            <span><strong>Total Amount:</strong> NPR {Number(total_amount)/100}</span>
                         </li>
                         <li className="flex items-center text-gray-700">
                             <Phone className="w-5 h-5 mr-2 text-gray-500" />
