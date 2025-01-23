@@ -163,7 +163,7 @@ class InitiatePaymentView(APIView):
         payment_url = 'https://dev.khalti.com/api/v2/epayment/initiate/'
 
         data = json.loads(request.body)
-        
+        # config('FRONTEND_URL')
         payload={
                 "return_url": "https://example.com/payment/",
                 "website_url": "https://example.com/",
