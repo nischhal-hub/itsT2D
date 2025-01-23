@@ -46,4 +46,7 @@ export type TOrderResponseType = {
   total_amount: number;
   checked_out: boolean;
   payment_method: string | null;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_email: string | null;
 };
