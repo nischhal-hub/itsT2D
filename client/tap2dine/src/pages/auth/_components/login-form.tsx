@@ -7,12 +7,10 @@ import FormInput from "../../../components/reusables/form-input";
 import { useLoginMutation } from "../../../api/mutations/auth.mutation";
 import useAuthContext from "../../../hooks/useAuthContext";
 import { toastTrigger } from "../../../lib/utils";
-import { useNavigate } from "react-router";
 
 
 export default function LoginForm() {
-    const {accessToken, setAccessToken, validateToken} = useAuthContext();
-    const navigate = useNavigate()
+    const { setAccessToken, validateToken} = useAuthContext();
     const form = useForm<TLoginType>({
         resolver: zodResolver(loginSchema),
         mode: "onChange",
