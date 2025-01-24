@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
             }
 
             try {
-                const response = await fetch("http://127.0.0.1:8000/api/test-auth/", {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/test-auth/`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
                     },
                 })
                 const data = await response.json()
-                setIsAuthenticated(data.message === "You are authenticated")
+                setIsAuthenticated(data.message === "You are authenticated")                
             } catch (error) {
                 setIsAuthenticated(false)
                 localStorage.removeItem('accessToken')
