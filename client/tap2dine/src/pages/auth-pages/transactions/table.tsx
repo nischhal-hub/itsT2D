@@ -13,7 +13,7 @@ export default function TransactionTable() {
         functions={{
           search: {
             name: "name",
-            placeholder: "Search by Transaction Name...",
+            placeholder: "Search by Customer Name...",
           },
         }}
       />

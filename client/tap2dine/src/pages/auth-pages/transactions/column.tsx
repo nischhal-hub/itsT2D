@@ -83,6 +83,7 @@ export const columns: ColumnDef<TOrderType>[] = [
         cell: ({ row }) => <span className="font-medium">#{row.original.id}</span>,
     },
     {
+        id:"name",
         accessorKey: "customer_name",
         header: ({ column }) => (
             <Button
