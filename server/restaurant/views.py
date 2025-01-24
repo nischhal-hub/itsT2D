@@ -10,9 +10,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
 from .models import Category, Table, Dish, Ingredient, AddOn,Order
 from .serializers import TableSerializer,DishWriteSerializer,DishSerializer, IngredientSerializer, AddOnSerializer,OrderSerializer, CheckOutSerializer,OrderReadSerializer
-import qrcode
-from io import BytesIO
-from django.core.files import File
 from rest_framework.decorators import action
 from django.http import JsonResponse
 
@@ -165,8 +162,8 @@ class InitiatePaymentView(APIView):
         data = json.loads(request.body)
         # config('FRONTEND_URL')
         payload={
-                "return_url": "https://example.com/payment/",
-                "website_url": "https://example.com/",
+                "return_url": config('PAYMENT_SUCCESS'),
+                "website_url": config('FRONTEND_URL'),
                 "amount": data.get('amount'),
                 "purchase_order_id": data.get('purchase_order_id'),
                 "purchase_order_name": data.get('purchase_order_name'),
