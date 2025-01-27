@@ -1,7 +1,6 @@
 import { useFetchDishes } from "../../../api/queries/dish.query";
 import { useFetchOrders } from "../../../api/queries/orders.query";
 import PageHeader from "../../../components/reusables/page-header";
-import TableFetchLoader from "../../../components/reusables/table-fetch-loader";
 import { DailyStats } from "./_components/daily-stats";
 import { MenuManagement } from "./_components/menu-management";
 import { OrdersOverview } from "./_components/orders-overview";
