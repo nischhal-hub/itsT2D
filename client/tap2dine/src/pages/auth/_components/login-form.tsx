@@ -22,7 +22,7 @@ export default function LoginForm() {
         }
     });
 
-    const {mutate} = useLoginMutation();
+    const {mutate,isLoading} = useLoginMutation();
     const onSubmit = (data: TLoginType) => {
         mutate(data,{
             onSuccess: (data) => {
@@ -61,7 +61,7 @@ export default function LoginForm() {
                         />
                     
                     
-                    <Button className="w-full mt-4">Login</Button>
+                    <Button className="w-full mt-4" disabled={isLoading}>Login</Button>
                 </form>
             </Form>
         </div>
