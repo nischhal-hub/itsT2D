@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
-import { Check, Plus, Clock, Coffee, AlertCircle } from "lucide-react";
+import { Check,  Clock, Coffee, AlertCircle, Loader2 } from "lucide-react";
 import PageHeader from "../../../../components/reusables/page-header";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "../../../../components/ui/card";
@@ -15,7 +15,7 @@ export default function SingleOrder() {
   const [order, setOrder] = useState<TOrderResponseType | null>(null);
   const { id: orderId } = useParams();
   const { data, isLoading } = useFetchSingleOrder({ orderId: String(orderId) });
-  const { mutate } = useUpdateOrderStatusMutation({ orderId: String(orderId) });
+  const { mutate, isLoading: updateStatusLoading } = useUpdateOrderStatusMutation({ orderId: String(orderId) });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,13 +97,6 @@ export default function SingleOrder() {
       <div>
         <div className="flex justify-between items-center">
           <p className="font-medium">Order Details</p>
-          <div>
-            {!order?.checked_out && (
-              <Button variant="secondary" className="text-white">
-                <Plus className="h-4 w-4 mr-2" /> Add New Dishes
-              </Button>
-            )}
-          </div>
         </div>
 
         <Card className="mt-4">
@@ -172,12 +165,16 @@ export default function SingleOrder() {
                     className={getStatusColor(order?.status as OrderStatus)}
                     onClick={() => handleStatusUpdate(statusAction.nextStatus as OrderStatus)}
                   >
-                    {statusAction.icon}
-                    {statusAction.label}
+                    {updateStatusLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> :
+                      <>
+                        {statusAction.icon}
+                        {statusAction.label}
+                      </>}
+
                   </Button>
                 )}
                 {order?.status === "Completed" && (
-                  <Button onClick={()=>navigate(`/orders/${orderId}/checkout`)}>Checkout</Button>
+                  <Button onClick={() => navigate(`/orders/${orderId}/checkout`)}>Checkout</Button>
                 )}
               </div>
             </div>
