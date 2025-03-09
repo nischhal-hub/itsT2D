@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-sismjs$y@nift(m8r$=puys$!0l_sb_t0gx(xb7#d2*ixg0(%6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = [config('RENDER_EXTERNAL_HOSTNAME','*')]
+ALLOWED_HOSTS = [config('RENDER_EXTERNAL_HOSTNAME','*'), 'localhost', '127.0.0.1']
 
 KHALTI_PUBLIC_KEY = config('KHALTI_PUBLIC_KEY')
 KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY')
