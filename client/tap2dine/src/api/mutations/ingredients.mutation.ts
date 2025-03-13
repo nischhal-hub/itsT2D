@@ -26,7 +26,7 @@ export const useEditIngredientMutation = ({
 }) => {
   const queryClient = useQueryClient();
   const editIngredientMutation = useMutation({
-    mutationFn: (data: TIngredientType) =>
+    mutationFn: (data: Omit<TIngredientType,"unit">) =>
       api.patch(`/ingredients/${initiatorName}/`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
