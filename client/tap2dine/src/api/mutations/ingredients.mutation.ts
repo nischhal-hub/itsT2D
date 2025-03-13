@@ -6,7 +6,7 @@ import { TIngredientType } from "../../schemas/ingredient";
 export const useAddIngredientMutation = () => {
   const queryClient = useQueryClient();
   const addIngredientMutation = useMutation({
-    mutationFn: (data: TIngredientType) => api.post("/ingredients/", data),
+    mutationFn: (data: Omit<TIngredientType, "unit">) => api.post("/ingredients/", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
       toastTrigger("Category added successfully", undefined, "success");
