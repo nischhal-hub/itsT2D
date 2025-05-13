@@ -1,75 +1,59 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "../../../components/ui/button";
-import { ArrowUpDown } from "lucide-react";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { ActionButton } from "../../../components/reusables/action-button";
-import { TIngredientResponseType } from "../../../types/response.types";
+import { ColumnDef } from '@tanstack/react-table'
+import { Button } from '../../../components/ui/button'
+import { ArrowUpDown } from 'lucide-react'
+import { Checkbox } from '../../../components/ui/checkbox'
 
-export const columns: ColumnDef<TIngredientResponseType>[] = [
-  {
-    id: "select",
-    accessorKey: "id",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+
+type MenuColumn = {
+    id: string
+    name: string
+    price: number
+    category: string
+    description: string
+}
+
+export const columns: ColumnDef<MenuColumn>[] = [
+    {
+        id: "select",
+        accessorKey: "id",
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
+                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
     },
-    cell: ({ row }) => {
-      if(row.original.name.includes("-"))
-        return row.original.name.split("-")[0];
-      else return row.original.name
+    {
+        accessorKey: 'name',
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Name <ArrowUpDown className="ml-2 h-4 w-4" /></Button>
+            )
+        },
+    },
+    {
+        accessorKey: 'price',
+        header: 'Price',
+    },
+    {
+        accessorKey: 'category',
+        header: 'Category',
+    },
+    {
+        accessorKey: 'description',
+        header: 'Description',
     }
-  },
-  {
-    accessorKey: "quantity_available",
-    header: "Quantity available",
-  },
-  {
-    header: "Unit",
-    cell: ({ row }) => row.original.name.split("-")[1],
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <ActionButton<TIngredientResponseType>
-          row={row.original}
-          edit={{
-            key: "EDIT_INGREDIENT",
-          }}
-          delete={{
-            type: "ingredient",
-          }}
-        />
-      );
-    },
-  },
-];
+]

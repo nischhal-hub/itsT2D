@@ -1,117 +1,65 @@
 import { DollarSign, ShoppingBag, Users } from 'lucide-react'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card'
-import { useMemo } from 'react'
-import { TOrderResponseType } from '../../../../types/response.types'
 
+const data = [
+    { name: 'Mon', revenue: 900 },
+    { name: 'Tue', revenue: 1200 },
+    { name: 'Wed', revenue: 1100 },
+    { name: 'Thu', revenue: 1300 },
+    { name: 'Fri', revenue: 1500 },
+    { name: 'Sat', revenue: 1700 },
+    { name: 'Sun', revenue: 1400 },
+]
 
-export function DailyStats({data:orders}:{data:TOrderResponseType[]}) {
-    // Calculate statistics for today's orders
-    const stats = useMemo(() => {
-        // Get today's date (in the same format as created_at)
-        const checkedOutOrders = orders.filter(order => order.checked_out)
-        const today = new Date().toISOString().split('T')[0]
-
-        // Filter orders for today
-        const todaysOrders = checkedOutOrders.filter(order =>
-            order.created_at.startsWith(today)
-        )
-
-        // Total revenue for today
-        const totalRevenue = todaysOrders.reduce((sum, order) =>
-            sum + parseFloat(order.total_amount.toString()), 0)
-
-        // Unique customers today
-        const uniqueCustomers = new Set(todaysOrders.map(order => order.customer_name)).size
-
-        // Total orders today
-        const totalOrders = todaysOrders.length
-
-        // Hourly revenue data for today
-        const hourlyRevenueData = Array.from({ length: 24 }, (_, hour) => ({
-            hour: `${hour}:00`,
-            revenue: 0
-          }));
-          
-          // Fill in revenue data for hours that have orders
-          todaysOrders.forEach(order => {
-            const hour = new Date(order.created_at).getHours();
-            hourlyRevenueData[hour].revenue += parseFloat(order.total_amount.toString());
-          });
-
-        return {
-            totalRevenue,
-            uniqueCustomers,
-            totalOrders,
-            hourlyRevenueData
-        }
-    }, [orders])
-
+export function DailyStats() {
     return (
         <Card className="col-span-4">
             <CardHeader className='py-4'>
-                <CardTitle className='text-lg'>Today's Statistics</CardTitle>
+                <CardTitle className='text-lg'>Daily Statistics</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div>
                         <div className='flex items-center space-x-2'>
                             <div className='bg-green-500/10 rounded-md p-1'>
-                                <DollarSign className="w-4 h-4 text-green-500" />
+                                <DollarSign className="w-4 h-4 text-green-500"/>
                             </div>
-                            <p className="text-md font-medium">Rs. {stats.totalRevenue.toFixed(2)}</p>
+                            <p className="text-sm font-medium text-gray-500">Revenue</p>
                         </div>
                         <div className='flex items-center'>
-                            <p className="text-sm font-medium text-gray-500">Total Revenue</p>
+                            <p className="text-md font-medium">Rs. 1,245</p>
                         </div>
                     </div>
                     <div>
                         <div className='flex items-center space-x-2'>
                             <div className='bg-red-500/10 rounded-md p-1'>
-                                <Users className="w-4 h-4 text-red-500" />
+                                <Users className="w-4 h-4 text-red-500"/>
                             </div>
-                            <p className="text-md font-medium">{stats.uniqueCustomers}</p>
+                            <p className="text-sm font-medium text-gray-500">Customers</p>
                         </div>
                         <div className='flex items-center'>
-                            <p className="text-sm font-medium text-gray-500">Unique Customers</p>
+                            <p className="text-md font-medium">21</p>
                         </div>
                     </div>
                     <div>
                         <div className='flex items-center space-x-2'>
                             <div className='bg-blue-500/10 rounded-md p-1'>
-                                <ShoppingBag className="w-4 h-4 text-blue-500" />
+                                <ShoppingBag className="w-4 h-4 text-blue-500"/>
                             </div>
-                            <p className="text-md font-medium">{stats.totalOrders}</p>
+                            <p className="text-sm font-medium text-gray-500">Orders</p>
                         </div>
                         <div className='flex items-center'>
-                            <p className="text-sm font-medium text-gray-500">Total Orders</p>
+                            <p className="text-md font-medium">24</p>
                         </div>
                     </div>
                 </div>
                 <div className="w-full h-[150px]">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={stats.hourlyRevenueData}>
-                            <XAxis
-                                dataKey="hour"
-                                fontSize={12}
-                                tickLine={false}
-                                axisLine={false}
-                            />
-                            <YAxis
-                                fontSize={12}
-                                tickLine={false}
-                                axisLine={false}
-                                tickFormatter={(value) => `Rs.${value}`}
-                            />
-                            <Tooltip
-                                formatter={(value) => [`Rs. ${value}`, 'Revenue']}
-                                contentStyle={{ backgroundColor: '#f5f5f5', border: 'none' }}
-                            />
-                            <Bar
-                                dataKey="revenue"
-                                fill='#3b82f6'
-                                radius={[4, 4, 0, 0]}
-                            />
+                        <BarChart data={data}>
+                            <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+                            <YAxis  fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                            <Bar dataKey="revenue" fill='#3b82f6' radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -119,3 +67,4 @@ export function DailyStats({data:orders}:{data:TOrderResponseType[]}) {
         </Card>
     )
 }
+
