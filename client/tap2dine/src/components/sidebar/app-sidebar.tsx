@@ -1,4 +1,14 @@
-import { HandPlatter, Home, ShoppingBag, ShoppingBasket, Utensils } from "lucide-react"
+import {
+  Coffee,
+  HandPlatter,
+  Home,
+  ShoppingBag,
+  ShoppingBasket,
+  Utensils,
+  LeafyGreen,
+  Banknote,
+  LogOut,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -10,11 +20,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../ui/sidebar.tsx"
+} from "../ui/sidebar.tsx";
 
-import {HORIZONTAL_LOGO, LOGO } from "../../constants/images.ts"
+import { HORIZONTAL_LOGO, LOGO } from "../../constants/images.ts";
 import { cn } from "../../lib/utils.ts";
 import { Link } from "react-router";
+import useAuthContext from "../../hooks/useAuthContext.tsx";
 // Menu items.
 const items = [
   {
@@ -42,14 +53,44 @@ const items = [
     url: "/inventory",
     icon: ShoppingBasket,
   },
-]
+  {
+    title: "Category",
+    url: "/category",
+    icon: Coffee,
+  },
+  {
+    title: "Add-ons",
+    url: "/add-ons",
+    icon: LeafyGreen,
+  },
+  {
+    title: "Transactions",
+    url: "/transactions",
+    icon: Banknote,
+  },
+];
 
 export function AppSidebar() {
-  const {state} = useSidebar();
+  const { state } = useSidebar();
+  const auth = useAuthContext();
+
+  const handleLogout = () => {
+    if (auth) {
+      auth.logout();
+    }
+  };
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className={cn(state === "collapsed" ? "" : "flex items-center justify-center")}>
-        <img src={state === "collapsed" ? LOGO : HORIZONTAL_LOGO} alt="logo" className={cn(state === "collapsed" ? "w-16" : "w-8/12")}/>
+      <SidebarHeader
+        className={cn(
+          state === "collapsed" ? "" : "flex items-center justify-center",
+        )}
+      >
+        <img
+          src={state === "collapsed" ? LOGO : HORIZONTAL_LOGO}
+          alt="logo"
+          className={cn(state === "collapsed" ? "w-16" : "w-8/12")}
+        />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -68,7 +109,17 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <div className="mt-auto mb-4 mx-3">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={handleLogout}>
+                <LogOut />
+                <span>Logout</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </div>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

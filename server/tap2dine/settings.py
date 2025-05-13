@@ -107,7 +107,8 @@ WSGI_APPLICATION = 'tap2dine.wsgi.application'
 # }
 
 DATABASES = {
-    'default' : dj_database_url.config(default=config('DATABASE_URL'))
+    'default' : dj_database_url.config(default=config('DATABASE_URL'),engine='django.db.backends.postgresql'),
+
 }
 
 # Password validation
